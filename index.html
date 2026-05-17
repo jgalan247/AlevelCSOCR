@@ -425,6 +425,42 @@ body.show-timings .timing-banner{display:block}
 .prevention-tick{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:#fff;border:1px solid var(--border);border-left:3px solid #10b981;border-radius:6px;font-size:13.5px;color:var(--text);text-decoration:none;transition:all .15s}
 .prevention-tick:hover{background:#ecfdf5;border-color:#34d399}
 .prevention-tick .goto{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em}
+
+/* ============ SUCCESS CRITERIA ============ */
+.success-criteria{margin-top:14px;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:14px 16px}
+.success-criteria h3{font-size:1rem;color:#065f46;margin-bottom:6px}
+.success-criteria ul{list-style:none;padding:0;margin:0}
+.success-criteria li{display:flex;gap:10px;padding:5px 0;font-size:14px;line-height:1.5;color:#0c4a4a}
+.success-criteria li::before{content:"✓";color:#10b981;font-weight:700;flex-shrink:0}
+
+/* ============ KEY VOCABULARY CHIPS ============ */
+.vocab-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding:10px 0 12px;border-bottom:1px dashed var(--border);align-items:center}
+.vocab-row .v-label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint);margin-right:4px;font-weight:600}
+.vocab-row .v-chip{font-family:var(--font-mono);font-size:11px;padding:3px 9px;background:#f1f5f9;border:1px solid var(--border-strong);border-radius:999px;color:var(--text);font-weight:500}
+
+/* ============ REVISION SUMMARY ============ */
+.revision-card{background:linear-gradient(to bottom right,#f8fafc,#ecfdf5)!important;border:1px solid #a7f3d0!important}
+.revision-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+@media (min-width:720px){.revision-grid{grid-template-columns:1fr 1fr}}
+.revision-bullet{background:#fff;border:1px solid var(--border);border-left:3px solid var(--brand-500);border-radius:8px;padding:12px 14px}
+.revision-bullet h4{font-size:.95rem;color:var(--brand-700);margin-bottom:4px}
+.revision-bullet p{font-size:13.5px;color:var(--text-dim);line-height:1.55;margin:0}
+.revision-bullet code{font-size:.85em}
+
+/* ============ QUIZ ============ */
+.quiz-question{background:rgba(248,250,252,.6);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.quiz-question .q-prompt{font-weight:500;margin-bottom:10px;line-height:1.55}
+.quiz-question .q-num{color:var(--brand-700);margin-right:6px;font-weight:700}
+.quiz-question .q-options{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.quiz-question .q-options label{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid var(--border);background:#fff;border-radius:8px;cursor:pointer;transition:all .15s;font-size:14px;line-height:1.5}
+.quiz-question .q-options label:hover{background:#f1f5f9}
+.quiz-question .q-options label.correct-pick{background:#ecfdf5;border-color:#10b981}
+.quiz-question .q-options label.wrong-pick{background:#fef2f2;border-color:#f87171}
+.quiz-question .q-options input{margin-top:3px;flex-shrink:0}
+.quiz-question .q-feedback{padding:8px 12px;border-radius:8px;font-size:14px;line-height:1.55;display:none}
+.quiz-question .q-feedback.show{display:block}
+.quiz-question .q-feedback.correct{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46}
+.quiz-question .q-feedback.wrong{background:#fef2f2;border:1px solid #fecaca;color:#7f1d1d}
 </style>
 </head>
 <body>
@@ -538,6 +574,18 @@ body.show-timings .timing-banner{display:block}
           <li><strong>LO3.</strong> Evaluate the role of human and policy controls — passwords, training, AUP, backups — in a defence-in-depth strategy.</li>
           <li><strong>LO4.</strong> Apply this knowledge to a structured 6-mark exam-style question.</li>
         </ul>
+
+        <div class="success-criteria">
+          <h3>Success criteria — by the end of the lesson you can:</h3>
+          <ul>
+            <li>State <strong>one</strong> piece of information a firewall inspects to decide allow/deny, and explain <strong>why</strong> that field matters.</li>
+            <li>Give <strong>two clear differences</strong> between symmetric and asymmetric encryption (any of: keys, speed, key-distribution, use case).</li>
+            <li>Name <strong>three prevention measures</strong> from three different rings (perimeter · data in transit · hosts &amp; users) and justify each one for a small UK business.</li>
+            <li>Use at least <strong>one real Guernsey or UK case</strong> from this lesson to back up an exam answer about prevention.</li>
+            <li>Complete a 6-mark exam question on prevention using the <strong>"name → function → application"</strong> structure for each measure.</li>
+          </ul>
+        </div>
+
         <h3>Recap — the threats we are defending against</h3>
         <p style="color:var(--text-dim)">Before we defend, name your enemy. Each of these is a vulnerability we will counter today.</p>
         <div class="recap-chips">
@@ -1449,68 +1497,121 @@ Host: example.com</pre>
       </div>
     </section>
 
-    <!-- ============ DISCUSSION · CLAUDE MYTHOS / AI &amp; CYBER ============ -->
-    <section class="section-card" id="s-mythos">
+    <!-- ============ QUIZ · QUICK SELF-CHECK ============ -->
+    <section class="section-card" id="s-quiz">
       <div class="head">
-        <div class="pill-row"><span class="pill investigate">💬</span><span class="step-label">Looking ahead · Discussion</span></div>
-        <h2>The next chapter — when AI joins <em style="color:var(--brand-600)">both</em> sides.</h2>
-        <p class="description">In May 2026, Anthropic announced <strong>Claude Mythos Preview</strong> — its <strong>latest</strong> frontier AI model, strong enough at finding software flaws that Anthropic refused to release it publicly and instead launched <strong>Project Glasswing</strong>, sharing it only with around forty vetted organisations (Apple, Google, Microsoft, AWS, NVIDIA, JPMorgan, the Linux Foundation, and others) so they could patch first. The story behind every defence in this lesson is about to change. This section gives the class the questions to wrestle with it.</p>
+        <div class="pill-row"><span class="pill quiz">?</span><span class="step-label">Quick quiz · self-check</span></div>
+        <h2>Six questions to test what stuck.</h2>
+        <p class="description">Pick the best answer, then press <strong>Check answer</strong>. Quick fire — one minute per question if needed.</p>
       </div>
       <div class="content">
 
-        <h3>What Mythos is — the short version</h3>
-        <ul style="margin-left:18px">
-          <li><strong>Who:</strong> Anthropic — the AI lab that makes Claude.</li>
-          <li><strong>What:</strong> Anthropic's <strong>latest</strong> frontier model — with offensive cyber-security capability strong enough that, in early testing, it found <em>thousands of high-severity, previously-unknown vulnerabilities</em> — including in every major operating system and every major web browser. Some flaws were decades old.</li>
-          <li><strong>How it was released:</strong> not publicly. Under <strong>Project Glasswing</strong>, Anthropic shared "Mythos Preview" with around 40 critical-infrastructure organisations so they could patch their software before anyone else could use Mythos-class models to attack them.</li>
-          <li><strong>Why it matters here:</strong> what one frontier lab built in 2026, criminal groups and nation-states will race to build next. Every defence in this lesson now has a new opponent waiting.</li>
-        </ul>
-
-        <h3>Watch — preview before use</h3>
-        <p style="color:var(--text-dim);font-size:14px">None of these have been previewed by the lesson author. <strong>Open and watch each one yourself before showing to a class</strong> — content and tone vary.</p>
-        <ul style="margin-left:18px;font-size:14.5px;line-height:1.7">
-          <li><a href="https://www.youtube.com/watch?v=YGyj_fXNyFU" target="_blank" rel="noopener"><strong>Claude Mythos Preview in 6 Minutes</strong></a> — short factual explainer.</li>
-          <li><a href="https://www.youtube.com/watch?v=IZ-iCJ1GnGI" target="_blank" rel="noopener"><strong>"Anthropic Withheld Claude Mythos. Here's What's Real."</strong></a> — separates the substance from the marketing.</li>
-          <li><a href="https://www.youtube.com/watch?v=urkVFZAhz3U" target="_blank" rel="noopener"><strong>"Project Glasswing / Claude Mythos: Anthropic's $x00 Million Marketing Stunt?"</strong></a> — strongly critical view; use as a counterweight.</li>
-          <li><a href="https://www.youtube.com/watch?v=DNhjITZy7cQ" target="_blank" rel="noopener"><strong>"What Mythos &amp; Glasswing mean for developers"</strong></a> — practical / developer-focused angle.</li>
-        </ul>
-
-        <h3>Read</h3>
-        <ul style="margin-left:18px;font-size:14.5px;line-height:1.7">
-          <li><a href="https://www.anthropic.com/glasswing" target="_blank" rel="noopener">Anthropic — Project Glasswing (primary source)</a></li>
-          <li><a href="https://www.schneier.com/blog/archives/2026/04/mythos-and-cybersecurity.html" target="_blank" rel="noopener">Bruce Schneier — <em>Mythos and Cybersecurity</em> (skeptical view)</a></li>
-          <li><a href="https://www.cnbc.com/2026/05/08/anthropic-mythos-ai-cybersecurity-banks.html" target="_blank" rel="noopener">CNBC — <em>Mythos set off cyber 'hysteria.' Experts say the threat was already here</em></a></li>
-          <li><a href="https://www.theringer.com/2026/05/06/tech/claude-mythos-anthropic-project-glasswing-cybersecurity-threat-ai" target="_blank" rel="noopener">The Ringer — <em>Could Claude Mythos Actually Destroy the Internet?</em></a></li>
-        </ul>
-
-        <h3>Five discussion questions</h3>
-        <p style="color:var(--text-dim)">There is no single right answer to any of these. Pair work for two minutes per question, then one answer per pair on the board.</p>
-
-        <div class="question-box">
-          <p class="question-text"><span class="qnum">D1.</span> If a frontier AI can find thousands of vulnerabilities in days, who does this favour in the long run — the <em>attacker</em> or the <em>defender</em>? Why?</p>
+        <div class="quiz-question">
+          <p class="q-prompt"><span class="q-num">Q1.</span> What does a packet-filtering firewall inspect to decide allow or deny?</p>
+          <div class="q-options">
+            <label><input type="radio" name="qz1" data-explanation="A firewall is a traffic cop, not a content scanner — it looks at headers, not what's inside emails or files."> The contents of email attachments</label>
+            <label><input type="radio" name="qz1" data-correct data-explanation="Packet filtering reads the source IP, destination IP, destination port and protocol from the packet header, then matches against a rules table — top-down, first match wins."> The headers of network packets (source IP, destination port, protocol)</label>
+            <label><input type="radio" name="qz1" data-explanation="Keylogging is a type of malware on the host — a network firewall does not see keystrokes."> The user's keystrokes</label>
+            <label><input type="radio" name="qz1" data-explanation="Firewalls do not inspect encryption keys; they decide on routing, not on cryptography."> The encryption keys in use</label>
+          </div>
+          <button class="btn btn-primary" data-quiz-check="qz1">Check answer</button>
+          <div class="q-feedback" id="qz1-fb"></div>
         </div>
-        <div class="question-box">
-          <p class="question-text"><span class="qnum">D2.</span> Anthropic gave Mythos to 40 large organisations first (Apple, Google, JPMorgan, AWS, the Linux Foundation…) so they could patch before anyone else got Mythos-class tools. Was this <strong>responsible disclosure</strong>, or an <strong>unfair head start</strong> that leaves a Guernsey SME, the States of Guernsey, or your school further behind?</p>
+
+        <div class="quiz-question">
+          <p class="q-prompt"><span class="q-num">Q2.</span> The Transport layer (TCP) adds a <strong>destination port</strong> to the header. What is it for?</p>
+          <div class="q-options">
+            <label><input type="radio" name="qz2" data-explanation="That's the IP address (Network layer), not the port."> To identify the user's geographic location</label>
+            <label><input type="radio" name="qz2" data-explanation="The encryption algorithm is negotiated by TLS, not by the port number."> To choose the encryption algorithm</label>
+            <label><input type="radio" name="qz2" data-correct data-explanation="The destination port tells the receiving computer which service should handle the data — port 80 → HTTP, 443 → HTTPS, 25 → SMTP, 53 → DNS, 3389 → RDP."> To tell the receiver which service should handle the data</label>
+            <label><input type="radio" name="qz2" data-explanation="The port number is a small fixed-size field; it does not describe the data's length."> To describe the size of the data</label>
+          </div>
+          <button class="btn btn-primary" data-quiz-check="qz2">Check answer</button>
+          <div class="q-feedback" id="qz2-fb"></div>
         </div>
-        <div class="question-box">
-          <p class="question-text"><span class="qnum">D3.</span> Look back at the five real-world cases above. If Mythos-class tools become cheaply available to criminals in two to three years, <em>which single defence in this lesson</em> would matter most to a Guernsey organisation — and which would matter least? Defend your ranking.</p>
+
+        <div class="quiz-question">
+          <p class="q-prompt"><span class="q-num">Q3.</span> What is the <em>main</em> difference between symmetric and asymmetric encryption?</p>
+          <div class="q-options">
+            <label><input type="radio" name="qz3" data-explanation="The other way round — symmetric is faster, because asymmetric uses heavy maths on large primes."> Asymmetric is faster than symmetric</label>
+            <label><input type="radio" name="qz3" data-correct data-explanation="Symmetric: one shared key for both encrypt and decrypt (fast, but key-distribution is hard). Asymmetric: a public + private key pair (slower, but key distribution is solved)."> Symmetric uses one shared key; asymmetric uses a public/private key pair</label>
+            <label><input type="radio" name="qz3" data-explanation="Strong encryption is legal in the UK. The historical US export controls of the 1990s are sometimes misremembered as a ban."> Symmetric encryption is illegal in the UK</label>
+            <label><input type="radio" name="qz3" data-explanation="Both can theoretically be brute-forced; in practice, well-implemented AES-256 and RSA-2048+ are well beyond brute force."> Asymmetric encryption cannot be brute-forced</label>
+          </div>
+          <button class="btn btn-primary" data-quiz-check="qz3">Check answer</button>
+          <div class="q-feedback" id="qz3-fb"></div>
         </div>
-        <div class="question-box">
-          <p class="question-text"><span class="qnum">D4.</span> For an A Level student thinking about a career in cyber security: if AI can find flaws, write exploits, <em>and</em> draft patches — should you still learn the material in this lesson? What <em>new</em> skills become more valuable?</p>
+
+        <div class="quiz-question">
+          <p class="q-prompt"><span class="q-num">Q4.</span> Why was the <strong>Medical Specialist Group</strong> in Guernsey fined £100,000 by the ODPA in October 2025?</p>
+          <div class="q-options">
+            <label><input type="radio" name="qz4" data-explanation="Their encryption wasn't the issue — patching was."> For using weak encryption on patient records</label>
+            <label><input type="radio" name="qz4" data-correct data-explanation="The ODPA found that MSG failed to install security updates on its email server for 13 months, including the patches that addressed the vulnerabilities the attackers later used. Detection took another 3.5 months."> For failing to install security updates for 13 months</label>
+            <label><input type="radio" name="qz4" data-explanation="Lost USBs do generate ODPA reports, but this fine was specifically about unpatched email-server vulnerabilities."> For losing an unencrypted USB stick</label>
+            <label><input type="radio" name="qz4" data-explanation="MSG was the victim of a cyber attack, not the source of a DDoS."> For launching DDoS attacks against competitors</label>
+          </div>
+          <button class="btn btn-primary" data-quiz-check="qz4">Check answer</button>
+          <div class="q-feedback" id="qz4-fb"></div>
         </div>
-        <div class="question-box">
-          <p class="question-text"><span class="qnum">D5.</span> Bruce Schneier argues that AI "does not create new vulnerabilities — it exposes existing ones," and that the chronic under-investment in security was the real problem all along. Is Mythos a <em>genuine inflection point</em> in cyber, or is it a <em>familiar threat re-packaged with new marketing</em>?</p>
+
+        <div class="quiz-question">
+          <p class="q-prompt"><span class="q-num">Q5.</span> Which prevention measure typically has the <em>lowest cost</em> and the <em>highest impact</em> per pound spent?</p>
+          <div class="q-options">
+            <label><input type="radio" name="qz5" data-explanation="Anti-malware matters, but its per-pound impact is smaller — it counters one class of threat (malware), not the social attacks that bypass it."> Anti-malware licences</label>
+            <label><input type="radio" name="qz5" data-explanation="A £5,000 firewall is overkill for most SMEs and doesn't stop the human attacks (phishing, social engineering) that succeed against perimeter defences."> A £5,000 enterprise firewall</label>
+            <label><input type="radio" name="qz5" data-correct data-explanation="Training is near-free, scales to every user, and defends against the highest-frequency attack vector — phishing and social engineering. The M&amp;S 2025 case shows what happens when training fails at the helpdesk."> Staff and user training</label>
+            <label><input type="radio" name="qz5" data-explanation="Disk encryption protects data at rest, but does not stop attacks while a system is in use — far narrower in impact than training."> Disk encryption on every device</label>
+          </div>
+          <button class="btn btn-primary" data-quiz-check="qz5">Check answer</button>
+          <div class="q-feedback" id="qz5-fb"></div>
+        </div>
+
+        <div class="quiz-question">
+          <p class="q-prompt"><span class="q-num">Q6.</span> HTTPS / TLS uses <em>both</em> symmetric and asymmetric encryption. Why?</p>
+          <div class="q-options">
+            <label><input type="radio" name="qz6" data-explanation="HTTPS uses AES (a symmetric cipher) for the bulk traffic — so AES is very much in use, not avoided."> To avoid using AES</label>
+            <label><input type="radio" name="qz6" data-correct data-explanation="Asymmetric encryption is slow but solves key distribution — it's used for the initial handshake. Once a fresh symmetric key has been agreed, the much faster symmetric cipher handles all the actual web traffic. Best of both."> Asymmetric handles the initial key exchange; symmetric is then used for the bulk traffic, because it is faster</label>
+            <label><input type="radio" name="qz6" data-explanation="HTTPS is designed to be no slower than plain HTTP — speed is not deliberately worsened."> To deliberately slow the page load down for security</label>
+            <label><input type="radio" name="qz6" data-explanation="HTTPS asks for credentials only when the application chooses to — TLS itself does not require any password."> Because HTTPS requires two passwords from the user</label>
+          </div>
+          <button class="btn btn-primary" data-quiz-check="qz6">Check answer</button>
+          <div class="q-feedback" id="qz6-fb"></div>
         </div>
 
       </div>
       <div class="teacher-note">
         <div class="tn-label">Teacher notes</div>
-        <div class="timing">7 mins · Pair-and-share · Open debate</div>
-        <p><strong>Why this section exists.</strong> Cyber security in 2026 is in flux. A Level students considering this field need to think about it <em>now</em>, not after their exam. The questions above are deliberately open — there is no mark scheme, only the quality of reasoning.</p>
-        <p><strong>Bias to flag openly.</strong> Much of the Mythos narrative comes from Anthropic itself, which has a commercial interest in the story being significant. Lean hard into the skeptical sources (Schneier; the "Marketing Stunt" video) to keep the discussion balanced. If you used an AI to help prepare any of this lesson, declare that to the class — modelling honest sourcing is itself part of the lesson.</p>
-        <p><strong>Pacing.</strong> If time is short, run only <strong>D1</strong> and <strong>D5</strong> — they bookend the debate. <strong>D3</strong> is the strongest local anchor; do it if there is room.</p>
-        <p><strong>Stretch.</strong> Does the encapsulation visual from earlier change with AI in the loop? (Trick question — it doesn't; the layers and the destination port still mean what they meant. What changes is how fast attackers <em>and</em> defenders find new ways to abuse them.)</p>
-        <p><strong>Verify before delivery.</strong> The Mythos story is brand-new (May 2026). Re-check the linked articles on the day for any update or correction; details may shift.</p>
+        <div class="timing">3 mins · Mini-whiteboards then click-through</div>
+        <p>Run as a <strong>show me</strong>: read each prompt aloud, students raise mini-whiteboards with A/B/C/D, then click the correct option live so the explanation appears for the whole class to read.</p>
+        <p><strong>Strongest questions to drill if short on time:</strong> Q1 (firewall fundamental), Q3 (sym vs asym — the most common 4–6 mark question), Q5 (defence-in-depth weighting).</p>
+        <p>Quiz results aren't stored. The explanations under each option are deliberate — every wrong answer is a named misconception worth addressing.</p>
+      </div>
+    </section>
+
+    <!-- ============ DISCUSSION · CLAUDE MYTHOS / AI &amp; CYBER ============ -->
+    <section class="section-card" id="s-mythos">
+      <div class="head">
+        <div class="pill-row"><span class="pill investigate">💬</span><span class="step-label">Looking ahead · Discussion</span></div>
+        <h2>One minute on AI &amp; cyber.</h2>
+        <p class="description">In <strong>May 2026</strong> Anthropic announced its latest frontier model, <strong>Claude Mythos Preview</strong>. In testing it found thousands of previously-unknown high-severity vulnerabilities — so Anthropic refused to release it publicly and shared it only with around forty critical-infrastructure organisations (Apple, Google, Microsoft, AWS, JPMorgan, the Linux Foundation, others) under <strong>Project Glasswing</strong>, so they could patch before anyone else got Mythos-class tools.</p>
+      </div>
+      <div class="content">
+
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">Discuss.</span> If a frontier AI can find thousands of vulnerabilities in days, who does this favour in the long run — the <em>attacker</em> or the <em>defender</em>? Why?</p>
+        </div>
+
+        <p style="font-size:13.5px;color:var(--text-dim)">Two reading anchors if you want to take this further (one supportive, one sceptical):
+          <a href="https://www.anthropic.com/glasswing" target="_blank" rel="noopener">Anthropic · Project Glasswing</a> ·
+          <a href="https://www.schneier.com/blog/archives/2026/04/mythos-and-cybersecurity.html" target="_blank" rel="noopener">Bruce Schneier · sceptical view</a>.
+        </p>
+
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">2 mins · Pair-and-share · One vote</div>
+        <p><strong>Bias to flag openly.</strong> Much of the Mythos narrative comes from Anthropic itself, which has a commercial interest in the story being significant. Lean on Schneier ("AI doesn't create new vulnerabilities — it exposes existing ones") to keep it balanced.</p>
+        <p><strong>If short on time, skip this whole section.</strong> The plenary asks "what's missing if a school is still breached" — that does the forward-looking work too.</p>
       </div>
     </section>
 
@@ -1576,17 +1677,90 @@ Host: example.com</pre>
       </div>
     </section>
 
-    <!-- ============ DOWNLOAD LESSON RECORD ============ -->
+    <!-- ============ REVISION SUMMARY (one-page take-home) ============ -->
+    <section class="section-card revision-card" id="s-revision">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">📋</span><span class="step-label">Revision summary</span></div>
+        <h2>The whole lesson on one page.</h2>
+        <p class="description">If you forget everything else, this is the page to keep. Designed to print or screenshot as a single take-home reference.</p>
+      </div>
+      <div class="content">
+
+        <div class="revision-grid">
+
+          <div class="revision-bullet">
+            <h4>Defence in depth</h4>
+            <p>Three concentric rings: <strong>perimeter</strong> (firewall, proxy), <strong>data in transit</strong> (encryption), <strong>hosts &amp; users</strong> (anti-malware, backups, passwords, training, AUP). An attacker only has to succeed once; a defender has to succeed every time — that's why we layer.</p>
+          </div>
+
+          <div class="revision-bullet">
+            <h4>Firewall</h4>
+            <p>Inspects packet <em>headers</em> against a rules table — source/destination IP, port, protocol. <strong>Packet filtering</strong> is stateless; <strong>stateful inspection</strong> tracks active connections. Top-down, first match wins. Default-deny inbound is the safe baseline.</p>
+          </div>
+
+          <div class="revision-bullet">
+            <h4>How a packet is built (encapsulation)</h4>
+            <p><code>Application data</code> → wrap with <code>TCP header</code> (adds source + destination port → <em>names the service</em>) = <strong>segment</strong> → wrap with <code>IP header</code> (source + destination IP) = <strong>packet</strong> → wrap with <code>Ethernet header + CRC trailer</code> = <strong>frame</strong>. Common ports: 80 HTTP · 443 HTTPS · 22 SSH · 23 Telnet · 25 SMTP · 53 DNS · 3389 RDP.</p>
+          </div>
+
+          <div class="revision-bullet">
+            <h4>Proxies</h4>
+            <p>A middle-man that makes requests on your behalf. Unlocks <strong>caching, content filtering, anonymity, logging</strong>. The server only sees the proxy's IP, not the client's. <em>Forward</em> proxy = represents the client (school web proxy); <em>reverse</em> proxy = sits in front of servers (CDN / load balancer).</p>
+          </div>
+
+          <div class="revision-bullet">
+            <h4>Symmetric encryption</h4>
+            <p>One shared key encrypts <em>and</em> decrypts. <strong>Fast</strong>. <strong>Key-distribution problem</strong>: how do Alice and Bob agree on the key without Eve seeing it? Caesar cipher is the toy example; <strong>AES-128/256</strong> (NIST, 2001) is the real one — used by HTTPS, BitLocker, WhatsApp.</p>
+          </div>
+
+          <div class="revision-bullet">
+            <h4>Asymmetric encryption</h4>
+            <p>Each person has a <strong>public</strong> key (give it away) and a <strong>private</strong> key (guard it). What one encrypts, only the other decrypts. <strong>Solves key distribution.</strong> Slow — used for the initial handshake; then a fresh symmetric key handles the bulk traffic. Examples: <em>RSA, ECC, Diffie–Hellman</em>.</p>
+          </div>
+
+          <div class="revision-bullet">
+            <h4>TLS / HTTPS uses both</h4>
+            <p>Asymmetric encryption for the handshake (exchange a fresh symmetric key); symmetric for the actual web traffic (speed). Best of both worlds — the padlock in your browser is asymmetric + symmetric working together.</p>
+          </div>
+
+          <div class="revision-bullet">
+            <h4>Human &amp; policy controls</h4>
+            <p><strong>Anti-malware</strong> (signatures + behaviour); <strong>backups</strong> (3-2-1 rule); <strong>strong passwords + MFA</strong>; <strong>Acceptable Use Policy</strong> (written contract); <strong>staff training</strong> (highest ROI — humans are the largest attack surface); <strong>logging &amp; monitoring</strong> (you can't defend what you can't see).</p>
+          </div>
+
+          <div class="revision-bullet">
+            <h4>Real cases to quote in the exam</h4>
+            <p><strong>MSG · Guernsey · £100k fine (2025):</strong> 13 months unpatched email server → patient data stolen. <strong>Ladies' College · Guernsey (2024):</strong> ransomware-style encryption; good backups saved them. <strong>States of Guernsey IT outage (2022-23):</strong> data-room AC failure + no DR plan. <strong>M&amp;S (2025):</strong> Scattered Spider social-engineered the helpdesk. <strong>MOVEit/Zellis (2023):</strong> SQL-injection zero-day hit UK payroll providers used by Channel Islands firms.</p>
+          </div>
+
+          <div class="revision-bullet">
+            <h4>Exam tip — the 6-mark "explain" template</h4>
+            <p>For each measure named: (a) <strong>what it does</strong> (the function), then (b) <strong>how it applies to this specific scenario</strong> (the application). Two marks each, three measures = six marks. Always cite a real case to lift the answer into the top band.</p>
+          </div>
+
+        </div>
+
+        <p style="font-size:13px;color:var(--text-dim);font-style:italic;margin-top:12px">Print just this card via the browser's print dialog (Ctrl/Cmd + P → select this section if your browser supports it), or use the <strong>Save as PDF</strong> button below to export the whole lesson including your own notes.</p>
+
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">0 min · Take-home reference</div>
+        <p>Not delivered live in the lesson; this card is designed for students to revisit during revision. Mention it briefly during the Plenary: "use the revision summary card to anchor your notes for the exam."</p>
+      </div>
+    </section>
+
+    <!-- ============ DOWNLOAD LESSON AS PDF ============ -->
     <section class="section-card download-card" id="s-download">
       <div class="head">
         <div class="pill-row"><span class="pill intro">⤓</span><span class="step-label">Save your work</span></div>
-        <h2>Download today's lesson.</h2>
+        <h2>Download today's lesson <em style="color:var(--brand-600)">as a PDF</em>.</h2>
       </div>
       <div class="content">
-        <p>This page does not save anything automatically. To keep a record of today's lesson, download a single HTML file containing the <strong>lesson content</strong> (with the hints, answers and worked outputs revealed for revision) together with everything <strong>you</strong> typed — your prediction, your defence-in-depth plan, every section note, and your reflections.</p>
-        <p style="font-size:13px;color:var(--text-dim)">The teacher's lesson notes are <em>not</em> included. The file is built inside your browser — nothing is uploaded anywhere.</p>
+        <p>This page does not save anything automatically. To keep a record of today's lesson, download a <strong>PDF</strong> containing the lesson content (with hints, answers and worked outputs revealed for revision) together with everything <strong>you</strong> typed — prediction, defence-in-depth plan, section notes, reflections.</p>
+        <p style="font-size:13px;color:var(--text-dim)">The teacher's lesson notes are <em>not</em> included. The PDF is built inside your browser — nothing is uploaded anywhere. The PDF library is fetched from a public CDN on first use (small one-off download).</p>
         <div style="margin-top:6px">
-          <button class="btn btn-primary" id="btn-download"><span aria-hidden="true">⤓</span> Download lesson record</button>
+          <button class="btn btn-primary" id="btn-download"><span aria-hidden="true">⤓</span> Download lesson as PDF</button>
           <span class="download-confirm" id="download-confirm"></span>
         </div>
       </div>
@@ -2285,19 +2459,76 @@ clone.outerHTML,
     ].join('\n');
   }
 
-  btn.addEventListener('click', () => {
-    const html = buildHtml();
-    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'network-security-prevention-lesson-record.html';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-    confirm.textContent = '✓ Downloaded — check your downloads folder.';
+  function loadScript(src){
+    return new Promise((resolve, reject) => {
+      if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error('Failed to load ' + src));
+      document.head.appendChild(s);
+    });
+  }
+
+  function printFallback(html){
+    const w = window.open('', '_blank');
+    if (!w){
+      confirm.textContent = '⚠ Allow pop-ups for this site, then try again.';
+      confirm.classList.add('shown');
+      return;
+    }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    const trigger = () => setTimeout(() => w.print(), 600);
+    if (w.document.readyState === 'complete') trigger(); else w.onload = trigger;
+    confirm.textContent = '✓ Print dialog opened — choose "Save as PDF" as the destination.';
     confirm.classList.add('shown');
+  }
+
+  btn.addEventListener('click', async () => {
+    confirm.textContent = '⏳ Building PDF…';
+    confirm.classList.add('shown');
+    const html = buildHtml();
+
+    try {
+      // Lazy-load html2pdf the first time it's needed.
+      if (typeof window.html2pdf === 'undefined') {
+        await loadScript('https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js');
+      }
+
+      // Render the lesson record into a hidden offscreen container so html2canvas
+      // can rasterise it with computed styles.
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const container = document.createElement('div');
+      container.style.cssText = 'position:absolute;left:-99999px;top:0;width:794px;background:#fff;color:#1e293b;font-family:Inter,system-ui,sans-serif';
+      // Inline the lesson record's <style> block AND its <body> contents.
+      const innerStyle = doc.querySelector('style');
+      if (innerStyle) container.appendChild(innerStyle.cloneNode(true));
+      Array.from(doc.body.childNodes).forEach(n => container.appendChild(n.cloneNode(true)));
+      document.body.appendChild(container);
+
+      // Wait for web fonts before rasterising.
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+
+      await window.html2pdf().set({
+        margin: [10, 10, 10, 10],
+        filename: 'network-security-prevention-lesson-record.pdf',
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      }).from(container).save();
+
+      document.body.removeChild(container);
+      confirm.textContent = '✓ PDF downloaded — check your downloads folder.';
+    } catch (err) {
+      // Fallback: open the static HTML in a new tab and trigger the print dialog,
+      // so the user can choose "Save as PDF" themselves.
+      console.warn('PDF library unavailable, falling back to print dialog:', err);
+      printFallback(html);
+    }
   });
 })();
 
@@ -2324,9 +2555,11 @@ clone.outerHTML,
     's-matcher':       3,   // 3-4 drag-and-drops · discuss
     's-make':          2,   // read scenario · outline only · take home
     's-exam':          3,   // read Q · reveal 2 mark points
-    's-mythos':        3,   // discussion D1 + D5 only
+    's-quiz':          3,   // 3 strongest Qs (Q1, Q3, Q5) on whiteboards
+    's-mythos':        2,   // one discuss prompt · skip if running over
     's-plenary':       2,   // display Qs · no full 60s timer
     's-reflection':    1,   // exit-ticket reminder
+    's-revision':      0,   // take-home reference · not delivered live
     's-download':      0    // not delivered live · mention if time
   };
 
@@ -2350,6 +2583,71 @@ clone.outerHTML,
     const on = document.body.classList.toggle('show-timings');
     btn.classList.toggle('on', on);
     btn.textContent = on ? '⏱ Hide timings' : '⏱ Timings · 50 min';
+  });
+})();
+
+/* ============ KEY VOCABULARY CHIPS ============ */
+(function(){
+  // One row of named-key vocabulary per major teaching section. Inject
+  // these into the section's .head so they sit right under the title,
+  // visible from the moment the section is opened.
+  const vocab = {
+    's-firewalls':     ['header', 'port', 'rules table', 'packet filtering', 'stateful inspection'],
+    's-encapsulation': ['plaintext', 'header', 'segment', 'packet', 'frame', 'port'],
+    's-proxies':       ['proxy', 'cache', 'content filter', 'anonymity', 'forward / reverse'],
+    's-predict':       ['plaintext', 'ciphertext', 'key', 'algorithm', 'shift'],
+    's-symmetric':     ['symmetric', 'shared key', 'AES', 'key-distribution problem'],
+    's-modify':        ['key', 'algorithm', 'ciphertext'],
+    's-asymmetric':    ['asymmetric', 'public key', 'private key', 'key pair', 'RSA', 'TLS handshake'],
+    's-others':        ['anti-malware', '3-2-1 backups', 'MFA', 'AUP', 'training', 'logging'],
+    's-breaches':      ['ransomware', 'phishing', 'patching', 'supply chain', 'ODPA'],
+    's-make':          ['perimeter', 'data in transit', 'hosts & users', 'defence in depth'],
+    's-quiz':          ['firewall', 'port', 'symmetric', 'asymmetric', 'training']
+  };
+
+  Object.keys(vocab).forEach(id => {
+    const card = document.getElementById(id);
+    if (!card) return;
+    const head = card.querySelector('.head');
+    if (!head) return;
+    const row = document.createElement('div');
+    row.className = 'vocab-row';
+    row.innerHTML = '<span class="v-label">key vocab</span>' +
+      vocab[id].map(w => '<span class="v-chip">' + w + '</span>').join('');
+    head.appendChild(row);
+  });
+})();
+
+/* ============ QUIZ · SELF-CHECK ============ */
+(function(){
+  document.querySelectorAll('[data-quiz-check]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const qName = btn.dataset.quizCheck;
+      const selected = document.querySelector('input[name="' + qName + '"]:checked');
+      const fb = document.getElementById(qName + '-fb');
+      const allOpts = document.querySelectorAll('input[name="' + qName + '"]');
+
+      // Clear previous highlights
+      allOpts.forEach(o => o.closest('label').classList.remove('correct-pick', 'wrong-pick'));
+
+      if (!selected){
+        fb.className = 'q-feedback wrong show';
+        fb.textContent = 'Pick an answer first.';
+        return;
+      }
+
+      const isCorrect = selected.hasAttribute('data-correct');
+      const correctOpt = document.querySelector('input[name="' + qName + '"][data-correct]');
+
+      // Highlight the correct answer regardless; mark the wrong pick if any
+      if (correctOpt) correctOpt.closest('label').classList.add('correct-pick');
+      if (!isCorrect) selected.closest('label').classList.add('wrong-pick');
+
+      fb.className = 'q-feedback ' + (isCorrect ? 'correct' : 'wrong') + ' show';
+      const prefix = isCorrect ? '✓ Correct. ' : '✗ Not quite. ';
+      const explanation = selected.dataset.explanation || '';
+      fb.textContent = prefix + explanation;
+    });
   });
 })();
 
