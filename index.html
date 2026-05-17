@@ -1757,8 +1757,8 @@ Host: example.com</pre>
         <h2>Download today's lesson <em style="color:var(--brand-600)">as a PDF</em>.</h2>
       </div>
       <div class="content">
-        <p>This page does not save anything automatically. To keep a record of today's lesson, download a <strong>PDF</strong> containing the lesson content (with hints, answers and worked outputs revealed for revision) together with everything <strong>you</strong> typed — prediction, defence-in-depth plan, section notes, reflections.</p>
-        <p style="font-size:13px;color:var(--text-dim)">The teacher's lesson notes are <em>not</em> included. The PDF is built inside your browser — nothing is uploaded anywhere. The PDF library is fetched from a public CDN on first use (small one-off download).</p>
+        <p>This page does not save anything automatically. To keep a record of today's lesson, save a <strong>PDF</strong> containing the lesson content (with hints, answers and worked outputs revealed for revision) together with everything <strong>you</strong> typed — prediction, defence-in-depth plan, section notes, reflections.</p>
+        <p style="font-size:13px;color:var(--text-dim)">When you click below, the lesson opens in a new tab and your browser's print dialog appears. <strong>Choose "Save as PDF"</strong> as the destination, then click <strong>Save</strong>. The teacher's lesson notes are not included. Nothing is uploaded anywhere — the PDF is generated entirely by your browser.</p>
         <div style="margin-top:6px">
           <button class="btn btn-primary" id="btn-download"><span aria-hidden="true">⤓</span> Download lesson as PDF</button>
           <span class="download-confirm" id="download-confirm"></span>
@@ -2459,76 +2459,46 @@ clone.outerHTML,
     ].join('\n');
   }
 
-  function loadScript(src){
-    return new Promise((resolve, reject) => {
-      if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
-      const s = document.createElement('script');
-      s.src = src;
-      s.onload = () => resolve();
-      s.onerror = () => reject(new Error('Failed to load ' + src));
-      document.head.appendChild(s);
-    });
-  }
+  btn.addEventListener('click', () => {
+    const html = buildHtml();
 
-  function printFallback(html){
+    // Open the lesson record in a new tab and auto-trigger the browser's print
+    // dialog. The user then chooses "Save as PDF" as the destination. This
+    // approach uses the browser's native print engine, which is far more
+    // reliable than client-side rasterisation libraries.
     const w = window.open('', '_blank');
     if (!w){
-      confirm.textContent = '⚠ Allow pop-ups for this site, then try again.';
+      confirm.textContent = '⚠ Pop-ups are blocked for this site. Allow pop-ups and try again.';
       confirm.classList.add('shown');
       return;
     }
+
     w.document.open();
     w.document.write(html);
     w.document.close();
-    const trigger = () => setTimeout(() => w.print(), 600);
-    if (w.document.readyState === 'complete') trigger(); else w.onload = trigger;
-    confirm.textContent = '✓ Print dialog opened — choose "Save as PDF" as the destination.';
-    confirm.classList.add('shown');
-  }
 
-  btn.addEventListener('click', async () => {
-    confirm.textContent = '⏳ Building PDF…';
-    confirm.classList.add('shown');
-    const html = buildHtml();
-
-    try {
-      // Lazy-load html2pdf the first time it's needed.
-      if (typeof window.html2pdf === 'undefined') {
-        await loadScript('https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js');
+    const triggerPrint = () => {
+      // Give fonts and layout a moment to settle before triggering print.
+      const fire = () => { try { w.focus(); w.print(); } catch (e) { /* ignore */ } };
+      try {
+        if (w.document.fonts && w.document.fonts.ready) {
+          w.document.fonts.ready.then(() => setTimeout(fire, 250));
+        } else {
+          setTimeout(fire, 800);
+        }
+      } catch (e) {
+        setTimeout(fire, 800);
       }
+    };
 
-      // Render the lesson record into a hidden offscreen container so html2canvas
-      // can rasterise it with computed styles.
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      const container = document.createElement('div');
-      container.style.cssText = 'position:absolute;left:-99999px;top:0;width:794px;background:#fff;color:#1e293b;font-family:Inter,system-ui,sans-serif';
-      // Inline the lesson record's <style> block AND its <body> contents.
-      const innerStyle = doc.querySelector('style');
-      if (innerStyle) container.appendChild(innerStyle.cloneNode(true));
-      Array.from(doc.body.childNodes).forEach(n => container.appendChild(n.cloneNode(true)));
-      document.body.appendChild(container);
-
-      // Wait for web fonts before rasterising.
-      if (document.fonts && document.fonts.ready) await document.fonts.ready;
-
-      await window.html2pdf().set({
-        margin: [10, 10, 10, 10],
-        filename: 'network-security-prevention-lesson-record.pdf',
-        image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
-      }).from(container).save();
-
-      document.body.removeChild(container);
-      confirm.textContent = '✓ PDF downloaded — check your downloads folder.';
-    } catch (err) {
-      // Fallback: open the static HTML in a new tab and trigger the print dialog,
-      // so the user can choose "Save as PDF" themselves.
-      console.warn('PDF library unavailable, falling back to print dialog:', err);
-      printFallback(html);
+    if (w.document.readyState === 'complete') {
+      triggerPrint();
+    } else {
+      w.addEventListener('load', triggerPrint);
     }
+
+    confirm.textContent = '✓ Print dialog opening — choose "Save as PDF" as the destination, then click Save.';
+    confirm.classList.add('shown');
   });
 })();
 
