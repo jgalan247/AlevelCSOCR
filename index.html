@@ -461,6 +461,13 @@ body.show-timings .timing-banner{display:block}
 .quiz-question .q-feedback.show{display:block}
 .quiz-question .q-feedback.correct{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46}
 .quiz-question .q-feedback.wrong{background:#fef2f2;border:1px solid #fecaca;color:#7f1d1d}
+
+/* ============ EXTENSION (BEYOND-SPEC) BADGE ============ */
+.extension-badge{display:flex;gap:10px;align-items:flex-start;margin:14px 0 10px;padding:10px 14px;background:#fef3c7;border:1px dashed #fbbf24;border-radius:8px}
+.extension-badge .ext-label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#92400e;background:#fbbf24;padding:3px 9px;border-radius:999px;font-weight:700;flex-shrink:0;line-height:1.4}
+.extension-badge .ext-text{font-size:13.5px;color:#78350f;line-height:1.55}
+.extension-badge .ext-text strong{color:#7c2d12}
+.extension-badge .ext-text em{font-style:italic;color:#7c2d12}
 </style>
 </head>
 <body>
@@ -702,6 +709,12 @@ body.show-timings .timing-banner{display:block}
         <p class="description">A firewall sits at the boundary between trusted (your network) and untrusted (the internet). Its job is brutally simple: <em>inspect every packet, apply the rules, allow or drop.</em></p>
       </div>
       <div class="content">
+
+        <div class="extension-badge">
+          <span class="ext-label">Extension</span>
+          <span class="ext-text">The three types below go <strong>beyond the bare spec wording</strong> ("<em>use of firewalls</em>"). They are deliberate enrichment: knowing the difference between packet filtering and stateful inspection helps students structure top-band answers in long-answer exam questions. The bare spec is also covered — see the "<em>Try it · Firewall console</em>" activity below.</span>
+        </div>
+
         <h3>Packet filtering</h3>
         <p>The firewall inspects each packet's <strong>header</strong> against a rules table — checking source IP, destination IP, port number, and protocol. It does <em>not</em> look inside the payload. Fast, but stateless: each packet is judged in isolation.</p>
         <h3>Stateful inspection</h3>
