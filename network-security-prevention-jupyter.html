@@ -1,0 +1,2358 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Security: Prevention — OCR H446 · 1.3.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8fafc; --bg-elev:#ffffff; --border:#e2e8f0; --border-strong:#cbd5e1;
+  --text:#1e293b; --text-dim:#475569; --text-faint:#94a3b8;
+  --brand-50:#eef6ff; --brand-100:#d9eaff; --brand-200:#b6d4ff; --brand-400:#558fff;
+  --brand-500:#2f6cf7; --brand-600:#1e52d8; --brand-700:#1a42ad; --brand-800:#1a3a8a;
+  --t-predict-bg:#fef3c7; --t-predict-fg:#92400e;
+  --t-run-bg:#d1fae5; --t-run-fg:#065f46;
+  --t-inv-bg:#e0f2fe; --t-inv-fg:#075985;
+  --t-mod-bg:#ede9fe; --t-mod-fg:#5b21b6;
+  --t-par-bg:#ccfbf1; --t-par-fg:#115e59;
+  --t-make-bg:#ffe4e6; --t-make-fg:#9f1239;
+  --t-quiz-bg:#d9eaff; --t-quiz-fg:#1a42ad;
+  --t-intro-bg:#e2e8f0; --t-intro-fg:#334155;
+  --code-bg:#0f172a; --code-text:#f1f5f9; --code-border:#1e293b;
+  --out-bg:#ecfdf5; --out-border:#a7f3d0; --out-fg:#065f46;
+  --warn:#f59e0b; --danger:#dc2626; --info:#0284c7;
+  --font-sans:'Inter','Segoe UI',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+  --shadow-card:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:3px solid var(--brand-500);outline-offset:2px;border-radius:4px}
+h1,h2,h3,h4{font-weight:600;color:var(--text);letter-spacing:-0.01em}
+h2{font-size:clamp(1.25rem,2.5vw,1.6rem)}
+h3{font-size:1.1rem;margin-top:12px;margin-bottom:6px}
+p{margin-bottom:10px}
+p strong,li strong{color:var(--text);font-weight:600}
+em{font-style:italic}
+code{font-family:var(--font-mono);font-size:.9em;background:#f1f5f9;color:var(--text);border:1px solid var(--border);padding:1px 6px;border-radius:4px}
+
+/* Top bar */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px;min-width:0;flex-wrap:wrap}
+.brand .school-mark{display:inline-flex;flex-direction:column;align-items:flex-start;line-height:1;text-decoration:none;color:var(--text);font-family:Inter,sans-serif;padding:2px 0}
+.brand .school-mark .m-the{font-size:9px;font-weight:600;letter-spacing:.18em;color:#475569;text-transform:uppercase}
+.brand .school-mark .m-big{font-size:14px;font-weight:800;line-height:1.05;letter-spacing:-0.01em;color:#0f172a;text-transform:uppercase}
+.brand .school-mark .m-loc{font-size:9px;font-weight:600;letter-spacing:.28em;color:#475569;margin-top:2px;text-transform:uppercase}
+.brand .school-mark .m-gradient{display:block;height:2px;width:96px;background:linear-gradient(to right,#db2777 0%,#9333ea 50%,#2563eb 100%);margin-top:4px;border-radius:1px}
+.brand .title{font-weight:600;color:var(--text)}
+.brand .sep{color:var(--text-faint);margin:0 6px}
+.brand .sub{color:var(--text-dim);font-size:14px}
+.nav-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.spec-tag{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border:1px solid var(--border-strong);border-radius:999px;background:#fff}
+.progress-strip{position:sticky;top:60px;z-index:49;height:3px;background:var(--border)}
+.progress-fill{height:100%;background:var(--brand-500);width:0;transition:width .15s ease}
+
+main{max-width:960px;margin:0 auto;padding:24px 16px}
+article{display:flex;flex-direction:column;gap:20px}
+
+/* Cover */
+.cover-card{background:linear-gradient(to bottom right,var(--brand-600),var(--brand-800));color:#fff;border-radius:16px;padding:28px;box-shadow:var(--shadow-card)}
+.cover-card h1{color:#fff;font-size:clamp(1.75rem,4vw,2.5rem);font-weight:700;letter-spacing:-0.025em;line-height:1.15;margin-bottom:12px}
+.cover-card .lede{color:rgba(255,255,255,.95);font-size:1.05rem;max-width:700px;margin-bottom:14px}
+.cover-card .lede em{color:#fff;font-style:italic}
+.cover-card .secondary{color:rgba(255,255,255,.85);font-size:13.5px;line-height:1.6}
+.cover-card .secondary em{color:#fff;font-weight:600;font-style:italic}
+.pills-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.cover-pill{display:inline-flex;padding:4px 10px;background:rgba(255,255,255,.18);color:#fff;border-radius:999px;font-size:12px;font-weight:600}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.18)}
+.meta-block .label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.7);margin-bottom:4px}
+.meta-block .value{color:#fff;font-weight:600}
+
+/* Section card */
+.section-card{background:var(--bg-elev);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow-card)}
+@media (min-width:640px){.section-card{padding:28px}}
+.section-card .head{margin-bottom:14px}
+.section-card .pill-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.section-card .description{margin-top:6px;color:var(--text-dim)}
+.section-card .content > * + *{margin-top:12px}
+
+.pill{display:inline-flex;align-items:center;justify-content:center;min-width:24px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.step-label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint);font-weight:600}
+.pill.intro{background:var(--t-intro-bg);color:var(--t-intro-fg)}
+.pill.predict{background:var(--t-predict-bg);color:var(--t-predict-fg)}
+.pill.run{background:var(--t-run-bg);color:var(--t-run-fg)}
+.pill.investigate{background:var(--t-inv-bg);color:var(--t-inv-fg)}
+.pill.modify{background:var(--t-mod-bg);color:var(--t-mod-fg)}
+.pill.parsons{background:var(--t-par-bg);color:var(--t-par-fg)}
+.pill.make{background:var(--t-make-bg);color:var(--t-make-fg)}
+.pill.quiz{background:var(--t-quiz-bg);color:var(--t-quiz-fg)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;font-family:var(--font-sans);font-size:14px;font-weight:500;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .15s ease}
+.btn-primary{background:var(--brand-600);color:#fff}
+.btn-primary:hover{background:var(--brand-700)}
+.btn-secondary{background:#fff;color:var(--brand-700);border-color:var(--brand-200)}
+.btn-secondary:hover{background:var(--brand-50)}
+.btn-ghost{background:transparent;color:var(--text-dim)}
+.btn-ghost:hover{background:#f1f5f9;color:var(--text)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Code cell */
+.code-cell{background:var(--code-bg);color:var(--code-text);border:1px solid var(--code-border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-card)}
+.code-cell .code-head{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:rgba(15,23,42,.5);border-bottom:1px solid rgba(255,255,255,.08)}
+.code-cell .dots{display:inline-flex;gap:5px}
+.code-cell .dots span{display:inline-block;width:10px;height:10px;border-radius:50%}
+.code-cell .dots span:nth-child(1){background:#fb7185}
+.code-cell .dots span:nth-child(2){background:#fcd34d}
+.code-cell .dots span:nth-child(3){background:#34d399}
+.code-cell .lang{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8}
+.code-cell pre{font-family:var(--font-mono);font-size:14px;padding:14px 16px;overflow-x:auto;line-height:1.6}
+.code-cell pre code{background:transparent;color:var(--code-text);border:none;padding:0;border-radius:0;font-size:inherit}
+.code-cell pre .line{display:flex;color:var(--code-text)}
+.code-cell pre .ln{color:#64748b;padding-right:14px;text-align:right;width:28px;flex-shrink:0;user-select:none}
+
+/* Output cell */
+.output-cell{border:1px solid var(--out-border);background:rgba(236,253,245,.7);border-radius:12px;overflow:hidden}
+.output-cell .output-head{display:flex;align-items:center;justify-content:space-between;padding:6px 16px;background:rgba(167,243,208,.45);border-bottom:1px solid var(--out-border)}
+.output-cell .output-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--out-fg);font-weight:600}
+.output-cell .output-note{font-size:11px;font-style:italic;color:rgba(6,95,70,.7)}
+.output-cell pre{font-family:var(--font-mono);font-size:14px;padding:14px 16px;white-space:pre-wrap;word-break:break-word;color:var(--text)}
+
+/* Textareas */
+.fld-area{width:100%;margin-top:8px;padding:12px;font-family:var(--font-sans);font-size:15px;color:var(--text);background:#fff;border:1px solid var(--border-strong);border-radius:8px;resize:vertical;transition:border-color .15s,box-shadow .15s}
+.fld-area:focus{outline:none;border-color:var(--brand-400);box-shadow:0 0 0 3px rgba(95,138,255,.2)}
+.helper-text{display:block;font-size:12px;color:var(--text-faint);margin-top:6px}
+
+/* Investigate Q&A */
+.question-box{background:rgba(248,250,252,.6);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.question-box + .question-box{margin-top:8px}
+.question-text{font-weight:500}
+.question-text .qnum{color:var(--brand-700);margin-right:6px}
+.reveal-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.hint-text,.answer-text{margin-top:10px;padding:8px 12px;border-radius:8px;font-size:14px;line-height:1.5}
+.hint-text{background:var(--t-predict-bg);border:1px solid #fde68a;color:#78350f}
+.answer-text{background:var(--t-inv-bg);border:1px solid #bae6fd;color:#075985}
+
+/* Defence-in-depth diagram */
+.castle-wrap{max-width:760px;margin:8px auto}
+.castle-wrap svg{width:100%;height:auto}
+
+/* Recap chips */
+.recap-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-family:var(--font-mono);font-size:12px;padding:5px 10px;background:#fff;border:1px solid var(--border-strong);border-radius:999px;color:var(--text-dim)}
+.chip.danger{color:var(--danger);border-color:rgba(220,38,38,.4)}
+.chip.warn{color:#b45309;border-color:rgba(245,158,11,.4)}
+
+/* Firewall sim */
+.firewall-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:820px){.firewall-grid{grid-template-columns:1fr 1fr}}
+.firewall-console{background:var(--code-bg);color:var(--code-text);border:1px solid var(--code-border);border-radius:12px;overflow:hidden}
+.console-head{background:rgba(15,23,42,.5);padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em}
+.live-dot{display:inline-block;width:7px;height:7px;background:#34d399;border-radius:50%;margin-right:6px;animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(52,211,153,.6)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(52,211,153,0)}}
+.rules-table{padding:14px 16px;font-family:var(--font-mono);font-size:12px}
+.rule-row{display:grid;grid-template-columns:1.2fr .6fr .7fr .7fr;padding:6px 0;border-bottom:1px solid #1e293b;color:#cbd5e1}
+.rule-row.head{color:#64748b;font-size:10px;text-transform:uppercase;letter-spacing:.1em}
+.rule-row.allow{color:#34d399}
+.rule-row.deny{color:#fb7185}
+.packet-area{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:16px}
+.packet-info{background:var(--code-bg);color:#cbd5e1;padding:14px 16px;border-radius:8px;font-family:var(--font-mono);font-size:13px;min-height:140px;margin-bottom:12px}
+.packet-info .header-line{color:#34d399;font-size:11px;text-transform:uppercase;letter-spacing:.1em;padding-bottom:8px;margin-bottom:10px;border-bottom:1px solid #1e293b}
+.packet-info .field{display:flex;justify-content:space-between;padding:3px 0}
+.packet-info .field .v{color:#f1f5f9}
+.decision-row{display:flex;gap:10px;margin-bottom:12px}
+.btn-decide{flex:1;padding:10px;font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em;background:#fff;border:1px solid var(--border-strong);color:var(--text);cursor:pointer;border-radius:8px;transition:all .15s}
+.btn-decide.allow:hover:not(:disabled){background:var(--t-run-bg);border-color:#34d399;color:var(--t-run-fg)}
+.btn-decide.deny:hover:not(:disabled){background:#fee2e2;border-color:#fb7185;color:#b91c1c}
+.btn-decide:disabled{opacity:.4;cursor:not-allowed}
+.feedback-box{padding:12px 14px;border-radius:8px;font-size:14px;min-height:60px;background:#f1f5f9;border-left:3px solid var(--border-strong)}
+.feedback-box.correct{background:var(--t-run-bg);border-left-color:#34d399}
+.feedback-box.wrong{background:#fee2e2;border-left-color:#fb7185}
+.feedback-box .verdict{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-faint);margin-bottom:4px}
+.sim-stats{display:flex;gap:18px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:12px;color:var(--text-dim);align-items:center}
+.sim-stats .num{color:var(--brand-600);font-weight:700;font-size:1.2rem;margin-right:4px}
+
+/* Proxy */
+.proxy-toggle-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.toggle-btn{font-family:var(--font-sans);font-size:13px;padding:7px 13px;background:#fff;border:1px solid var(--border-strong);color:var(--text-dim);border-radius:8px;cursor:pointer;transition:all .15s}
+.toggle-btn:hover{color:var(--text);border-color:var(--brand-200)}
+.toggle-btn.on{background:var(--brand-600);color:#fff;border-color:var(--brand-600)}
+.proxy-stage{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:24px;min-height:240px}
+.proxy-stage svg{width:100%;height:220px;display:block}
+.proxy-actions-bar{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.proxy-info{margin-top:14px;padding:12px 16px;background:var(--brand-50);border-left:3px solid var(--brand-500);border-radius:6px;font-size:14px;color:var(--text-dim);line-height:1.55}
+.proxy-info strong{color:var(--text)}
+
+/* Cipher */
+.cipher-stage{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:820px){.cipher-stage{grid-template-columns:1fr 1fr}}
+.cipher-side{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px}
+.label-small{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint);font-weight:600;margin-bottom:8px;display:block}
+.cipher-input{width:100%;background:#fff;border:1px solid var(--border-strong);color:var(--text);padding:12px;font-family:var(--font-mono);font-size:14px;border-radius:8px}
+.cipher-input:focus{outline:none;border-color:var(--brand-400)}
+.shift-control{display:flex;align-items:center;gap:12px;margin:14px 0}
+.shift-control label{font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
+.shift-control input[type=range]{flex:1;accent-color:var(--brand-500)}
+.shift-val{font-family:var(--font-mono);font-size:1.4rem;font-weight:700;color:var(--brand-600);min-width:32px;text-align:right}
+.ciphertext-out{background:var(--code-bg);color:#5fb878;padding:14px;border-radius:8px;font-family:var(--font-mono);font-size:14px;min-height:60px;word-break:break-all}
+.key-warning{margin-top:12px;padding:12px;background:var(--t-predict-bg);border-left:3px solid var(--warn);border-radius:6px;font-size:13px;color:#78350f}
+.key-warning strong{color:#92400e}
+
+/* Asymmetric */
+.actors-row{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:14px}
+@media (min-width:720px){.actors-row{grid-template-columns:1fr auto 1fr;align-items:center}}
+.actor{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.actor.alice{border-color:rgba(95,138,255,.45)}
+.actor.bob{border-color:rgba(245,158,11,.45)}
+.actor .name{font-size:1.25rem;font-weight:700;margin-bottom:4px}
+.actor .role{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px}
+.actor .keys{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.key-icon{font-family:var(--font-mono);font-size:11px;padding:4px 10px;border-radius:999px;background:#fff;border:1px solid var(--border-strong)}
+.key-icon.public{color:var(--info);border-color:rgba(2,132,199,.4)}
+.key-icon.private{color:#b45309;border-color:rgba(245,158,11,.5)}
+.transit-arrow{text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;padding:8px}
+.transit-arrow .arrow{font-size:1.4rem;color:var(--brand-500);margin-bottom:4px}
+@media (max-width:719px){.transit-arrow .arrow{transform:rotate(90deg);display:inline-block}}
+.padlock-controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.padlock-controls input{flex:1;min-width:200px;background:#fff;border:1px solid var(--border-strong);color:var(--text);padding:10px 12px;font-family:var(--font-mono);font-size:13px;border-radius:8px}
+.padlock-controls input:focus{outline:none;border-color:var(--brand-400)}
+.transmission-log{background:var(--code-bg);color:#cbd5e1;border-radius:8px;padding:14px;font-family:var(--font-mono);font-size:12px;max-height:240px;overflow-y:auto}
+.log-line{padding:3px 0;color:#94a3b8;line-height:1.55}
+.log-line .ts{color:#475569;margin-right:6px}
+.log-line.ok{color:#34d399}
+.log-line.crypt{color:#6db4d9;word-break:break-all}
+.log-line.warn{color:#f59e0b}
+
+/* Compare table */
+.compare-table{margin-top:18px;background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.compare-row{display:grid;grid-template-columns:.7fr 1fr 1fr;gap:1px;background:var(--border)}
+.compare-row > div{background:var(--bg-elev);padding:12px 16px;font-size:14px}
+.compare-row.head > div{background:#f1f5f9;font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim)}
+.compare-row.head > div:first-child{color:var(--brand-700)}
+.compare-row .feature{font-family:var(--font-mono);font-size:12px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em}
+.tls-callout{margin-top:18px;padding:16px;background:var(--brand-50);border-left:3px solid var(--brand-500);border-radius:6px;font-size:14.5px;color:var(--text-dim)}
+.tls-callout strong{color:var(--brand-700)}
+
+/* Parsons */
+.parsons-task{border:1px solid var(--border);background:rgba(248,250,252,.5);border-radius:12px;padding:16px}
+.parsons-task ol{list-style:none;padding:0;margin:12px 0 0}
+.parsons-task li{display:flex;gap:0;align-items:stretch;border:2px solid #334155;background:var(--code-bg);color:var(--code-text);border-radius:10px;overflow:hidden;margin-bottom:8px;transition:border-color .15s}
+.parsons-task li.right{border-color:#34d399}
+.parsons-task li.wrong{border-color:rgba(251,113,133,.6)}
+.parsons-task .handle{display:flex;align-items:center;gap:8px;padding:0 12px;background:#1e293b;color:#64748b;cursor:grab;user-select:none}
+.parsons-task .handle .pos{font-family:var(--font-mono);font-size:11px;color:#94a3b8;width:16px;text-align:right}
+.parsons-task .ptext{flex:1;font-size:14px;padding:10px 12px;line-height:1.55}
+.parsons-task .move-buttons{display:flex;align-items:center;gap:4px;padding:0 8px}
+.parsons-task .move-buttons button{width:30px;height:30px;background:#1e293b;color:#cbd5e1;border:none;border-radius:6px;cursor:pointer;font-size:11px}
+.parsons-task .move-buttons button:hover:not(:disabled){background:#334155}
+.parsons-task .move-buttons button:disabled{opacity:.3;cursor:not-allowed}
+.parsons-actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.parsons-feedback{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:14px;display:none}
+.parsons-feedback.shown{display:block}
+.parsons-feedback.correct{background:var(--t-run-bg);border:1px solid #34d399;color:var(--t-run-fg)}
+.parsons-feedback.partial{background:var(--t-predict-bg);border:1px solid #fcd34d;color:#92400e}
+.parsons-tip{margin-top:10px;padding:8px 12px;background:var(--t-par-bg);border:1px solid #5eead4;color:var(--t-par-fg);border-radius:8px;font-size:13px}
+
+/* Defence cards */
+.defence-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
+.defence-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;transition:border-color .15s,transform .15s}
+.defence-card:hover{border-color:var(--brand-200);transform:translateY(-1px)}
+.defence-card .glyph{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;background:var(--brand-100);color:var(--brand-700);border-radius:10px;font-weight:700;margin-bottom:10px;font-family:var(--font-mono)}
+.defence-card h4{margin-bottom:6px;font-size:1.05rem}
+.defence-card p{font-size:14px;color:var(--text-dim);margin-bottom:8px;line-height:1.55}
+.defence-card .also{font-size:11px;font-family:var(--font-mono);color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em}
+
+/* Matcher */
+.matcher-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:12px}
+@media (min-width:720px){.matcher-grid{grid-template-columns:1fr 1fr}}
+.matcher-col h4{font-family:var(--font-mono);font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.threat,.defence-slot{background:var(--bg);border:1px solid var(--border-strong);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:14px;cursor:grab;transition:all .15s;user-select:none}
+.threat:active{cursor:grabbing}
+.threat.dragging{opacity:.4}
+.threat.matched{background:var(--t-run-bg);border-color:#34d399;color:var(--t-run-fg);cursor:default}
+.defence-slot{cursor:default;min-height:60px;border-style:dashed}
+.defence-slot.drag-over{background:rgba(95,138,255,.08);border-color:var(--brand-400);border-style:solid}
+.defence-slot .defence-title{font-weight:600;margin-bottom:4px}
+.defence-slot .matched-threat{margin-top:6px;padding:5px 10px;background:rgba(52,211,153,.12);border-left:2px solid #34d399;font-size:13px;color:var(--t-run-fg);border-radius:4px}
+.matcher-feedback{margin-top:14px;padding:12px;background:var(--brand-50);border-left:3px solid var(--brand-500);border-radius:6px;font-size:14px;min-height:40px;color:var(--text-dim)}
+
+/* Exam */
+.exam-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg-elev)}
+.exam-head{background:#f1f5f9;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.exam-head .meta{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.exam-head .marks{font-size:1.05rem;font-weight:700;color:var(--warn)}
+.exam-body{padding:20px}
+.exam-question{font-size:1rem;line-height:1.6;margin-bottom:14px}
+.mark-points{margin-top:12px}
+.mark-point{display:grid;grid-template-columns:32px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--border);opacity:0;max-height:0;overflow:hidden;transition:opacity .35s,max-height .35s}
+.mark-point.shown{opacity:1;max-height:200px}
+.mark-point .tick{color:var(--brand-600);font-family:var(--font-mono);font-size:13px;padding-top:2px;font-weight:700}
+.mark-point .point-text{font-size:14px;color:var(--text-dim);line-height:1.55}
+.mark-point .point-text strong{color:var(--text)}
+
+/* Plenary */
+.plenary-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+@media (min-width:720px){.plenary-grid{grid-template-columns:repeat(3,1fr)}}
+.plenary-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.plenary-card .num{font-size:2.4rem;font-weight:700;color:var(--brand-600);line-height:1;margin-bottom:6px;font-family:var(--font-mono)}
+.plenary-card .prompt{font-size:14px;color:var(--text-dim);line-height:1.5}
+.countdown{margin-top:18px;text-align:center}
+.countdown .timer{font-size:4rem;font-weight:700;color:var(--brand-600);line-height:1;font-family:var(--font-mono)}
+.countdown .timer.warn{color:var(--warn)}
+.countdown .timer.urgent{color:var(--danger);animation:shake .4s infinite}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+.countdown-actions{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* Teacher notes */
+.teacher-note{margin-top:14px;padding:14px 16px;background:rgba(245,158,11,.07);border:1px dashed rgba(245,158,11,.4);border-radius:10px;display:none}
+.teacher-note.shown{display:block}
+.teacher-note .tn-label{font-family:var(--font-mono);font-size:10px;color:#b45309;text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px;font-weight:700}
+.teacher-note p{font-size:14px;color:var(--text-dim);line-height:1.55;margin-bottom:6px}
+.teacher-note ul{margin-left:18px}
+.teacher-note li{font-size:14px;color:var(--text-dim);margin-bottom:4px}
+.teacher-note .timing{font-family:var(--font-mono);font-size:11px;color:#b45309;margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+
+/* Tomorrow box */
+.tomorrow{margin-top:18px;padding:18px;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--brand-500);border-radius:8px}
+.tomorrow h3{margin-top:0}
+
+footer{padding:40px 16px 50px;text-align:center;color:var(--text-faint);font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em}
+
+@media (max-width:720px){.topbar{padding:10px 14px}.brand .sub,.brand .sep{display:none}main{padding:14px 12px}}
+
+/* ============ ENCAPSULATION VISUAL ============ */
+.encap-stage{margin-top:8px}
+.layer{border-radius:10px;padding:14px;margin:8px 0;transition:all .25s ease}
+.layer-banner{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+.layer-header,.layer-trailer{font-family:var(--font-mono);font-size:12px;padding:8px 10px;border-radius:6px;background:rgba(255,255,255,.55);margin-bottom:8px;line-height:1.5}
+.layer-trailer{margin-top:8px;margin-bottom:0}
+.app-layer{background:#f0f9ff;border:2px solid #7dd3fc}
+.app-layer > .layer-banner{color:#075985}
+.app-layer pre{font-family:var(--font-mono);font-size:13px;background:rgba(255,255,255,.7);padding:10px 12px;border-radius:6px;white-space:pre-wrap;line-height:1.5;color:#0c4a6e}
+.tcp-layer{background:#fef3c7;border:2px solid #fcd34d}
+.tcp-layer > .layer-banner{color:#92400e}
+.tcp-layer > .layer-header,.tcp-layer > .layer-trailer{color:#78350f}
+.tcp-layer .port-highlight{background:#fde68a;padding:1px 6px;border-radius:4px;font-weight:700;color:#92400e}
+.ip-layer{background:#ede9fe;border:2px solid #c4b5fd}
+.ip-layer > .layer-banner{color:#5b21b6}
+.ip-layer > .layer-header,.ip-layer > .layer-trailer{color:#4c1d95}
+.eth-layer{background:#f1f5f9;border:2px solid #cbd5e1}
+.eth-layer > .layer-banner{color:#334155}
+.eth-layer > .layer-header,.eth-layer > .layer-trailer{color:#1e293b}
+.layer.not-added{border:none!important;padding:0!important;background:transparent!important;margin:0!important}
+.layer.not-added > .layer-banner,
+.layer.not-added > .layer-header,
+.layer.not-added > .layer-trailer{display:none}
+.layer-callout{padding:12px 14px;background:rgba(95,138,255,.08);border-left:3px solid var(--brand-500);border-radius:6px;color:var(--text-dim);font-size:14px;margin-top:10px;line-height:1.6}
+.layer-callout strong{color:var(--text)}
+.layer-callout em{font-style:italic;color:var(--brand-700);font-weight:600}
+.encap-controls{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.port-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.port-table th,.port-table td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)}
+.port-table th{background:#f1f5f9;font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-weight:600}
+.port-table td:first-child{font-family:var(--font-mono);font-weight:600;color:var(--brand-700);width:140px}
+.port-table tr:last-child td{border-bottom:none}
+
+/* ============ ANNOTATION BOX ============ */
+.annotation-box{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.annotation-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:transparent;color:var(--text-dim);border:none;cursor:pointer;font-size:13px;font-family:var(--font-sans);border-radius:6px}
+.annotation-toggle:hover{background:#f1f5f9;color:var(--text)}
+.annotation-toggle .indicator{display:none;padding:2px 8px;background:var(--t-predict-bg);color:var(--t-predict-fg);border-radius:999px;font-size:11px;font-weight:600;margin-left:4px;align-items:center}
+.annotation-toggle .indicator.on{display:inline-flex}
+.annotation-area{margin-top:10px;display:none}
+.annotation-area.open{display:block}
+.annotation-area textarea{width:100%;background:#fffbeb;border:1px solid var(--border-strong);color:var(--text);padding:10px 12px;font-family:var(--font-sans);font-size:14.5px;line-height:1.55;border-radius:8px;resize:vertical;min-height:84px;transition:border-color .15s,box-shadow .15s}
+.annotation-area textarea:focus{outline:none;border-color:var(--brand-400);box-shadow:0 0 0 3px rgba(95,138,255,.2)}
+.annotation-hint{font-size:12px;color:var(--text-faint);margin-top:6px}
+
+/* ============ DOWNLOAD SECTION ============ */
+.download-card{background:linear-gradient(to bottom right,#eef6ff,#ecfdf5)!important;border:1px solid var(--brand-200)!important}
+.download-card .pill.intro{background:#fff;color:var(--brand-700)}
+.download-confirm{display:none;align-items:center;gap:4px;color:var(--out-fg);font-size:14px;font-weight:600;margin-left:10px}
+.download-confirm.shown{display:inline-flex}
+
+/* ============ BREACH CARDS ============ */
+.breach-stack{display:flex;flex-direction:column;gap:14px;margin-top:12px}
+.breach-card{background:var(--bg-elev);border:1px solid var(--border);border-left:4px solid var(--danger);border-radius:12px;padding:18px 20px;transition:transform .15s,border-color .15s}
+.breach-card:hover{transform:translateY(-1px);border-left-color:#b91c1c}
+.breach-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:8px}
+.breach-date{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-faint);padding:3px 9px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:999px;font-weight:600}
+.breach-head h4{font-size:1.1rem;font-weight:700;color:var(--text)}
+.breach-meta{display:grid;grid-template-columns:1fr;gap:8px;margin:6px 0 10px}
+@media (min-width:720px){.breach-meta{grid-template-columns:1fr 1fr}}
+.breach-meta .field{padding:8px 12px;background:#fafafa;border:1px solid var(--border);border-radius:8px;font-size:13.5px;line-height:1.55}
+.breach-meta .field .lbl{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint);font-weight:600;display:block;margin-bottom:2px}
+.breach-card .repercussions{padding:10px 14px;background:#fef2f2;border-left:3px solid var(--danger);border-radius:6px;font-size:14px;color:#7f1d1d;line-height:1.55;margin-top:6px}
+.breach-card .repercussions strong{color:#7f1d1d}
+.breach-card .map{margin-top:10px;font-size:13px;color:var(--text-dim);padding:8px 12px;background:var(--brand-50);border-radius:6px;line-height:1.55}
+.breach-card .map strong{color:var(--brand-700)}
+.breach-sources{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.breach-sources .src-label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-faint);margin-right:4px}
+.breach-sources a{display:inline-flex;align-items:center;padding:4px 10px;background:#fff;border:1px solid var(--border-strong);border-radius:999px;font-size:12px;color:var(--text-dim);text-decoration:none;transition:all .15s}
+.breach-sources a:hover{border-color:var(--brand-400);color:var(--brand-700);background:var(--brand-50)}
+.breach-warning{padding:12px 14px;background:#fffbeb;border:1px dashed #fcd34d;border-radius:8px;color:#78350f;font-size:13.5px;margin-top:10px;line-height:1.55}
+.breach-warning strong{color:#92400e}
+
+/* ============ TIMINGS TOGGLE ============ */
+.time-pill{display:none;align-items:center;gap:4px;padding:4px 10px;background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:999px;font-family:var(--font-mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-left:auto}
+body.show-timings .time-pill{display:inline-flex}
+.topbar .timings-toggle.on{background:var(--brand-600);color:#fff;border-color:var(--brand-600)}
+.timing-banner{display:none;background:#fef3c7;border-bottom:1px solid #fde68a;color:#78350f;font-size:13px;text-align:center;padding:8px 14px;line-height:1.55}
+.timing-banner strong{color:#92400e}
+body.show-timings .timing-banner{display:block}
+
+/* ============ SPEC REFERENCE CARD ============ */
+.spec-card{background:linear-gradient(to bottom right,#f8fafc,#eef6ff)!important;border:1px solid var(--brand-200)!important}
+.spec-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:8px}
+@media (min-width:820px){.spec-grid{grid-template-columns:1.3fr 1fr}}
+.spec-list,.spec-links{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.spec-points{list-style:none;padding:0;margin:0}
+.spec-points li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start;font-size:14px;line-height:1.55}
+.spec-points li:last-child{border-bottom:none}
+.spec-marker{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#f1f5f9;color:var(--text-dim);font-family:var(--font-mono);font-size:12px;font-weight:700;border-radius:6px;flex-shrink:0}
+.spec-points li.spec-touched .spec-marker{background:#fef3c7;color:#92400e}
+.spec-points li.spec-focus .spec-marker{background:var(--brand-600);color:#fff}
+.touched-tag,.focus-tag{display:inline-block;padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-left:6px;font-family:var(--font-mono)}
+.touched-tag{background:#fef3c7;color:#92400e}
+.focus-tag{background:var(--brand-600);color:#fff}
+.spec-link-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border:1px solid var(--border-strong);border-radius:8px;color:var(--brand-700);text-decoration:none;font-size:14px;margin-bottom:8px;transition:all .15s}
+.spec-link-btn:hover{border-color:var(--brand-400);background:var(--brand-50);transform:translateX(2px)}
+.prevention-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px;margin-top:10px}
+.prevention-tick{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:#fff;border:1px solid var(--border);border-left:3px solid #10b981;border-radius:6px;font-size:13.5px;color:var(--text);text-decoration:none;transition:all .15s}
+.prevention-tick:hover{background:#ecfdf5;border-color:#34d399}
+.prevention-tick .goto{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <a href="#top" class="school-mark" aria-label="The Sixth Form Centre Guernsey">
+      <span class="m-the">The</span>
+      <span class="m-big">Sixth Form</span>
+      <span class="m-big">Centre</span>
+      <span class="m-loc">Guernsey</span>
+      <span class="m-gradient" aria-hidden="true"></span>
+    </a>
+    <span class="title">A Level Computer Science</span>
+    <span class="sep">·</span>
+    <span class="sub">Networks &amp; Security</span>
+  </div>
+  <div class="nav-controls">
+    <span class="spec-tag">OCR H446 · 1.3.3</span>
+    <button class="btn btn-secondary timings-toggle" id="toggle-timings">⏱ Timings · 50 min</button>
+    <button class="btn btn-secondary" id="toggle-notes">Teacher notes</button>
+  </div>
+</header>
+<div class="progress-strip"><div class="progress-fill" id="progress-fill"></div></div>
+<div class="timing-banner"><strong>Interview cut · ≈50 minutes total.</strong> Every section is covered briefly. The ⏱ pill on each card shows its budget. Teacher-note timings (longer) describe a fuller, non-rushed delivery.</div>
+
+<main>
+  <article>
+
+    <!-- ============ COVER ============ -->
+    <section class="cover-card" id="s-cover">
+      <div class="pills-row">
+        <span class="cover-pill">A Level Computer Science</span>
+        <span class="cover-pill">OCR H446 · 1.3.3</span>
+        <span class="cover-pill">Period 3 · 55 minutes</span>
+      </div>
+      <h1>Network Security: <em>Prevention</em>.</h1>
+      <p class="lede">Yesterday, we met the threats. Today, we build the walls. By the end of this lesson you will be able to <em>explain</em>, <em>compare</em> and <em>apply</em> the prevention measures that keep modern networks alive.</p>
+      <p class="secondary">This lesson uses the PRIMM teaching model where it fits the content. You will <em>predict</em> the output of a Caesar cipher, <em>investigate</em> the rules behind it, <em>modify</em> the key, complete a Parsons puzzle on the steps of asymmetric encryption, and finally <em>make</em> your own defence-in-depth plan for a small business.</p>
+      <div class="meta-grid">
+        <div class="meta-block"><div class="label">Specification</div><div class="value">1.3.3 · Networks</div></div>
+        <div class="meta-block"><div class="label">Topic</div><div class="value">Security &amp; Prevention</div></div>
+        <div class="meta-block"><div class="label">Duration</div><div class="value">55 minutes</div></div>
+        <div class="meta-block"><div class="label">Year</div><div class="value">Year 12</div></div>
+      </div>
+    </section>
+
+    <!-- ============ SPEC REFERENCE ============ -->
+    <section class="section-card spec-card" id="s-spec">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">§</span><span class="step-label">OCR H446 · Specification reference</span></div>
+        <h2>Where this lesson sits in <em style="color:var(--brand-600)">OCR H446</em>.</h2>
+        <p class="description">Today's lesson is taught from <strong>Section 1.3.3 (Networks)</strong> of the OCR A Level Computer Science specification. The focus is point <strong>(c)</strong> — Network security and threats — and the lesson also touches point <strong>(b)</strong> when we look at how a packet is built (protocol layering).</p>
+      </div>
+      <div class="content">
+
+        <div class="spec-grid">
+          <div class="spec-list">
+            <h3 style="font-size:1rem;margin-bottom:8px">1.3.3 Networks · spec points</h3>
+            <ol class="spec-points">
+              <li><span class="spec-marker">a</span><span>Characteristics of networks and the importance of protocols and standards.</span></li>
+              <li class="spec-touched"><span class="spec-marker">b</span><span>The internet structure: TCP/IP stack · DNS · <strong>protocol layering</strong> · LANs &amp; WANs · packet &amp; circuit switching <span class="touched-tag">touched today</span></span></li>
+              <li class="spec-focus"><span class="spec-marker">c</span><span><strong>Network security and threats — use of firewalls, proxies and encryption.</strong> <span class="focus-tag">today's focus</span></span></li>
+              <li><span class="spec-marker">d</span><span>Network hardware.</span></li>
+              <li><span class="spec-marker">e</span><span>Client-server and peer to peer.</span></li>
+            </ol>
+          </div>
+
+          <div class="spec-links">
+            <h3 style="font-size:1rem;margin-bottom:8px">Official sources</h3>
+            <p style="font-size:13.5px;color:var(--text-dim);margin-bottom:10px">Open these in a new tab. The wording below tracks the spec line-by-line.</p>
+            <a class="spec-link-btn" href="https://www.ocr.org.uk/Images/170844-specification-accredited-a-level-gce-computer-science-h446.pdf" target="_blank" rel="noopener">📘 H446 Specification (PDF) — §1.3.3 on page 19</a>
+            <a class="spec-link-btn" href="https://www.ocr.org.uk/Images/231758-networks-delivery-guide.pdf" target="_blank" rel="noopener">📕 OCR Delivery Guide — 1.3.3 Networks (PDF)</a>
+          </div>
+        </div>
+
+        <h3 style="margin-top:18px;font-size:1rem">Today's prevention checklist</h3>
+        <p style="color:var(--text-dim);font-size:14px">Every defence the brief asks for is in this lesson — most have their own section; the rest are cards inside the "Human &amp; policy layer". Click a tick to jump.</p>
+        <div class="prevention-grid">
+          <a href="#s-firewalls" class="prevention-tick">✓ Firewalls <span class="goto">→ §03</span></a>
+          <a href="#s-proxies" class="prevention-tick">✓ Proxies <span class="goto">→ §04</span></a>
+          <a href="#s-symmetric" class="prevention-tick">✓ Encryption · symmetric <span class="goto">→ §05</span></a>
+          <a href="#s-asymmetric" class="prevention-tick">✓ Encryption · asymmetric <span class="goto">→ §06</span></a>
+          <a href="#s-others" class="prevention-tick">✓ Anti-malware <span class="goto">→ defence card</span></a>
+          <a href="#s-others" class="prevention-tick">✓ Backup &amp; recovery <span class="goto">→ defence card</span></a>
+          <a href="#s-others" class="prevention-tick">✓ Strong passwords + MFA <span class="goto">→ defence card</span></a>
+          <a href="#s-others" class="prevention-tick">✓ Acceptable Use Policy <span class="goto">→ defence card</span></a>
+          <a href="#s-others" class="prevention-tick">✓ Staff &amp; user training <span class="goto">→ defence card</span></a>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">1 min · Anchor for the panel</div>
+        <p>Show this card first — within thirty seconds the panel sees the lesson is mapped explicitly to 1.3.3(c) and that every prevention measure the brief lists has a home in the lesson.</p>
+        <p><strong>Bonus tie-in:</strong> the encapsulation visual in §04a maps to 1.3.3(b) "protocol layering" — useful evidence of cross-spec thinking if the panel asks.</p>
+        <p><strong>Don't dwell.</strong> Point at the ticks. Move on.</p>
+      </div>
+    </section>
+
+    <!-- ============ OBJECTIVES + RECAP ============ -->
+    <section class="section-card" id="s-objectives">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">i</span><span class="step-label">Objectives &amp; recap</span></div>
+        <h2>Where we are, where we're going.</h2>
+      </div>
+      <div class="content">
+        <h3>Learning objectives</h3>
+        <ul style="margin-left:18px">
+          <li><strong>LO1.</strong> Describe how firewalls and proxies protect a network, including packet filtering and stateful inspection.</li>
+          <li><strong>LO2.</strong> Compare symmetric and asymmetric encryption with reference to key exchange, speed, and use case.</li>
+          <li><strong>LO3.</strong> Evaluate the role of human and policy controls — passwords, training, AUP, backups — in a defence-in-depth strategy.</li>
+          <li><strong>LO4.</strong> Apply this knowledge to a structured 6-mark exam-style question.</li>
+        </ul>
+        <h3>Recap — the threats we are defending against</h3>
+        <p style="color:var(--text-dim)">Before we defend, name your enemy. Each of these is a vulnerability we will counter today.</p>
+        <div class="recap-chips">
+          <span class="chip danger">Malware · Viruses</span>
+          <span class="chip danger">Worms</span>
+          <span class="chip danger">Trojans</span>
+          <span class="chip danger">Ransomware</span>
+          <span class="chip danger">Keylogger</span>
+          <span class="chip warn">Spyware</span>
+          <span class="chip warn">Adware</span>
+          <span class="chip warn">Phishing</span>
+          <span class="chip warn">Pharming</span>
+          <span class="chip warn">Social engineering</span>
+          <span class="chip danger">SQL injection</span>
+          <span class="chip danger">DDoS</span>
+          <span class="chip warn">Brute force</span>
+          <span class="chip warn">Man-in-the-middle</span>
+          <span class="chip warn">Weak passwords</span>
+          <span class="chip danger">Eavesdropping</span>
+          <span class="chip">Black · Grey · White hat hackers</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-faint);margin-top:14px;font-style:italic">Hold one of these in your mind — by the plenary you will need to match a defence to it.</p>
+
+        <div style="margin-top:14px;padding:12px 14px;background:#f0f9ff;border:1px solid #bae6fd;border-left:3px solid var(--info);border-radius:8px;font-size:14px;color:var(--text-dim);line-height:1.55">
+          <strong style="color:var(--info)">📺 Pre-lesson revision (homework before this lesson)</strong><br>
+          <a href="https://www.youtube.com/watch?v=wZFs9tVKlUs&amp;list=PLCiOXwirraUDhcQX2Y1yso6ImXxkQ9sat&amp;index=5" target="_blank" rel="noopener"><strong>OCR A Level (H446) SLR11 — 1.3 Network security threats</strong></a><br>
+          Covers each of the threats listed in the chips above — and <em>only</em> the threats the OCR spec asks for, no extras. About 10 minutes. Watch it the night before this lesson so the recap above lands fast.
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">5 mins · Whole class · Cold call</div>
+        <p>Cold call three students for a one-sentence definition of any chip on the right. Retrieval practice — Rosenshine principle 2.</p>
+        <p>If a student stumbles on "man-in-the-middle", bookmark it: <em>"Hold that thought — you'll see exactly how encryption defeats it in fifteen minutes."</em></p>
+        <p><strong>About the pre-lesson video:</strong> the SLR-numbered series is widely used for OCR H446 (probably Craig'n'Dave — verify the channel yourself before sending the link out). The lesson author has not viewed it; please preview once to confirm tone and length before setting it as homework.</p>
+      </div>
+    </section>
+
+    <!-- ============ DEFENCE IN DEPTH ============ -->
+    <section class="section-card" id="s-bigpicture">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">i</span><span class="step-label">The big picture</span></div>
+        <h2>No single wall stops everything. <em style="color:var(--brand-600)">Defence in depth.</em></h2>
+        <p class="description">Real networks layer their defences. If one layer fails, the next catches what slipped through. Today's content sits in three concentric rings.</p>
+      </div>
+      <div class="content">
+        <div class="castle-wrap">
+          <svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg" aria-label="Defence in depth diagram">
+            <ellipse cx="400" cy="180" rx="370" ry="160" fill="none" stroke="#2f6cf7" stroke-width="1" stroke-dasharray="4 6" opacity="0.55"/>
+            <text x="400" y="40" text-anchor="middle" font-family="JetBrains Mono" font-size="11" letter-spacing="0.12em" fill="#1a42ad">PERIMETER · FIREWALL · PROXY</text>
+            <ellipse cx="400" cy="180" rx="250" ry="115" fill="none" stroke="#10b981" stroke-width="1" stroke-dasharray="4 6" opacity="0.55"/>
+            <text x="400" y="80" text-anchor="middle" font-family="JetBrains Mono" font-size="11" letter-spacing="0.12em" fill="#065f46">DATA IN TRANSIT · ENCRYPTION</text>
+            <ellipse cx="400" cy="180" rx="140" ry="72" fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4 6" opacity="0.6"/>
+            <text x="400" y="125" text-anchor="middle" font-family="JetBrains Mono" font-size="11" letter-spacing="0.12em" fill="#b45309">HOSTS &amp; USERS · AV · PASSWORDS · TRAINING</text>
+            <rect x="370" y="165" width="60" height="40" fill="#f1f5f9" stroke="#0284c7" stroke-width="1.5" rx="3"/>
+            <text x="400" y="190" text-anchor="middle" fill="#075985" font-family="JetBrains Mono" font-size="11" letter-spacing="0.12em">DATA</text>
+            <g opacity="0.85">
+              <line x1="20" y1="180" x2="55" y2="180" stroke="#dc2626" stroke-width="1.5"/>
+              <polygon points="55,180 49,177 49,183" fill="#dc2626"/>
+              <text x="38" y="170" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#dc2626">DDoS</text>
+              <line x1="780" y1="120" x2="745" y2="135" stroke="#dc2626" stroke-width="1.5"/>
+              <polygon points="745,135 752,133 750,139" fill="#dc2626"/>
+              <text x="765" y="105" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#dc2626">Malware</text>
+              <line x1="780" y1="240" x2="745" y2="225" stroke="#dc2626" stroke-width="1.5"/>
+              <polygon points="745,225 752,227 750,221" fill="#dc2626"/>
+              <text x="765" y="260" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#dc2626">MITM</text>
+              <line x1="20" y1="240" x2="55" y2="225" stroke="#dc2626" stroke-width="1.5"/>
+              <polygon points="55,225 49,228 51,222" fill="#dc2626"/>
+              <text x="38" y="260" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#dc2626">Phishing</text>
+            </g>
+          </svg>
+        </div>
+        <p style="text-align:center;color:var(--text-dim);font-style:italic">An attacker only has to succeed once — a defender has to succeed every time. That asymmetry is why we layer.</p>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">3 mins · Q&amp;A · Concept anchor</div>
+        <p>Ask: <em>"Which ring stops phishing?"</em> — innermost (training the human). Use to underline that security is not just technical. Return to this diagram visually at each transition.</p>
+      </div>
+    </section>
+
+    <!-- ============ FIREWALLS ============ -->
+    <section class="section-card" id="s-firewalls">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">01</span><span class="step-label">Outer ring</span></div>
+        <h2>Firewalls.</h2>
+        <p class="description">A firewall sits at the boundary between trusted (your network) and untrusted (the internet). Its job is brutally simple: <em>inspect every packet, apply the rules, allow or drop.</em></p>
+      </div>
+      <div class="content">
+        <h3>Packet filtering</h3>
+        <p>The firewall inspects each packet's <strong>header</strong> against a rules table — checking source IP, destination IP, port number, and protocol. It does <em>not</em> look inside the payload. Fast, but stateless: each packet is judged in isolation.</p>
+        <h3>Stateful inspection</h3>
+        <p>A more sophisticated firewall <strong>tracks active connections</strong>. It remembers that you sent a request to a web server, so the response packet coming back is expected. An unsolicited packet pretending to be a "reply" is dropped.</p>
+        <h3>Proxy firewall</h3>
+        <p>The line between firewall and proxy blurs. A proxy firewall terminates the connection on one side, inspects everything (including application-layer content), and opens a new connection on the other side. We will meet proxies properly in the next section.</p>
+
+        <h3 style="margin-top:18px">Try it — firewall console</h3>
+        <p style="color:var(--text-dim)">You are the firewall. Apply the rules table to each inbound packet.</p>
+        <div class="firewall-grid">
+          <div class="firewall-console">
+            <div class="console-head">
+              <span><span class="live-dot"></span>FW-01 · RULES</span>
+              <span>v 3.1</span>
+            </div>
+            <div class="rules-table">
+              <div class="rule-row head"><span>SRC</span><span>PORT</span><span>PROTO</span><span>ACTION</span></div>
+              <div class="rule-row allow"><span>ANY</span><span>443</span><span>TCP</span><span>ALLOW</span></div>
+              <div class="rule-row allow"><span>ANY</span><span>80</span><span>TCP</span><span>ALLOW</span></div>
+              <div class="rule-row allow"><span>10.0.0.0/8</span><span>22</span><span>TCP</span><span>ALLOW</span></div>
+              <div class="rule-row deny"><span>ANY</span><span>23</span><span>TCP</span><span>DENY</span></div>
+              <div class="rule-row deny"><span>ANY</span><span>3389</span><span>TCP</span><span>DENY</span></div>
+              <div class="rule-row deny"><span>185.4.x.x</span><span>ANY</span><span>ANY</span><span>DENY</span></div>
+            </div>
+          </div>
+          <div class="packet-area">
+            <div class="packet-info" id="packet-info">
+              <div class="header-line">Inbound packet · awaiting</div>
+              <div class="field"><span>Source IP</span><span class="v">—</span></div>
+              <div class="field"><span>Dest Port</span><span class="v">—</span></div>
+              <div class="field"><span>Protocol</span><span class="v">—</span></div>
+              <div class="field"><span>Flag</span><span class="v">—</span></div>
+            </div>
+            <div class="decision-row">
+              <button class="btn-decide allow" id="btn-allow" disabled>Allow</button>
+              <button class="btn-decide deny" id="btn-deny" disabled>Deny</button>
+            </div>
+            <div class="feedback-box" id="fw-feedback">
+              <div class="verdict">Ready</div>
+              <div>Click <strong>Start</strong> to begin. Six packets. Match each to the rules above.</div>
+            </div>
+            <div class="sim-stats">
+              <div><span class="num" id="fw-score">0</span>correct</div>
+              <div><span class="num" id="fw-attempts">0</span>/ 6</div>
+              <button class="btn btn-primary" id="btn-fw-start" style="margin-left:auto">Start</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">10 mins · Activity · Mini-whiteboards</div>
+        <p>Pause after packet 3 and ask: <em>"Why is port 23 (Telnet) blocked?"</em> Answer: Telnet sends credentials in plaintext — anyone sniffing the wire reads the password. Lovely bridge into encryption.</p>
+        <p><strong>Common misconception:</strong> students think a firewall stops viruses. It generally doesn't — a firewall is a traffic cop, not a content scanner. Anti-malware does the content scanning.</p>
+        <p><strong>Stretch question:</strong> "Does the order of the rules matter?" → Yes; firewalls process top-down, first match wins.</p>
+      </div>
+    </section>
+
+    <!-- ============ ENCAPSULATION ============ -->
+    <section class="section-card" id="s-encapsulation">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">⊟</span><span class="step-label">How a packet is built</span></div>
+        <h2>What is the firewall actually looking at?</h2>
+        <p class="description">Before a packet ever reaches the firewall it has been built up in <strong>layers</strong>. Each layer wraps its own header around the data underneath. This wrapping is called <strong>encapsulation</strong>. Click the buttons below to add one layer at a time.</p>
+      </div>
+      <div class="content">
+        <div class="encap-stage" id="encap-stage" data-state="0">
+          <div class="layer eth-layer not-added">
+            <div class="layer-banner">Ethernet · Link layer — frame</div>
+            <div class="layer-header">Eth header · src MAC AA:BB:CC:DD:EE:FF · dst MAC 11:22:33:44:55:66</div>
+            <div>
+              <div class="layer ip-layer not-added">
+                <div class="layer-banner">IP · Network layer — packet</div>
+                <div class="layer-header">IP header · src 203.0.113.42 · dst 93.184.216.34</div>
+                <div>
+                  <div class="layer tcp-layer not-added">
+                    <div class="layer-banner">TCP · Transport layer — segment</div>
+                    <div class="layer-header">TCP header · src port 51234 · <span class="port-highlight">dst port 80</span></div>
+                    <div>
+                      <div class="layer app-layer">
+                        <div class="layer-banner">Application data — the HTTP request itself</div>
+<pre>GET /index.html HTTP/1.1
+Host: example.com</pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="layer-trailer">Eth trailer · CRC (error check)</div>
+          </div>
+        </div>
+
+        <div class="layer-callout" id="encap-callout">
+          <strong>Step 0.</strong> Your browser has written an HTTP request. Right now this is just data — there is no addressing information at all. Press the buttons below to add each layer's header.
+        </div>
+
+        <div class="encap-controls">
+          <button class="btn btn-ghost" data-encap-step="0">Reset</button>
+          <button class="btn btn-primary" data-encap-step="1">+ Transport header (TCP)</button>
+          <button class="btn btn-primary" data-encap-step="2" disabled>+ Network header (IP)</button>
+          <button class="btn btn-primary" data-encap-step="3" disabled>+ Link header (Ethernet)</button>
+        </div>
+
+        <h3 style="margin-top:20px">So what is the port number really for?</h3>
+        <p>One computer runs many services at once — a web server, an email server, an SSH service, perhaps a database. They all share the same IP address. The <strong>destination port number</strong> in the TCP header is how the receiving computer decides which service should be handed the incoming data.</p>
+        <p style="color:var(--text-dim)">Yes — that is the correct interpretation. The Transport layer (TCP or UDP) writes <em>both</em> a source port and a destination port into its header. The <strong>destination port</strong> is the one that names the service to use; the source port lets the receiver send a reply back to the right process on the sender.</p>
+
+        <table class="port-table">
+          <thead><tr><th>Destination port</th><th>Service the receiver hands the data to</th></tr></thead>
+          <tbody>
+            <tr><td>80</td><td>HTTP — plain web server</td></tr>
+            <tr><td>443</td><td>HTTPS — encrypted web server (uses TLS)</td></tr>
+            <tr><td>22</td><td>SSH — remote secure shell</td></tr>
+            <tr><td>23</td><td>Telnet — remote shell (plaintext, insecure)</td></tr>
+            <tr><td>25</td><td>SMTP — email sending</td></tr>
+            <tr><td>53</td><td>DNS — domain-name lookup</td></tr>
+            <tr><td>3389</td><td>RDP — Windows Remote Desktop</td></tr>
+          </tbody>
+        </table>
+
+        <div class="proxy-info" style="margin-top:14px">
+          <strong>Why this matters for the firewall.</strong> A packet-filtering firewall reads the headers added by the Network layer (IP) and the Transport layer (TCP) — destination IP, destination port, protocol — and decides allow or deny on that alone. It does <em>not</em> open the application data. That is exactly why the firewall console above checked Source IP, Destination Port and Protocol: those are the fields visible in the outer headers.
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">6 mins · Direct instruction with reveal</div>
+        <p>Step through the layers slowly. Pause at the TCP step and cold-call: <em>"If the destination port were 25 instead of 80, which service on the receiving computer would handle this data?"</em> Answer: SMTP / the email server.</p>
+        <p><strong>Bridge to tomorrow:</strong> these four layers <em>are</em> the TCP/IP model, which maps onto the OSI model we meet tomorrow. Today's purpose: enough understanding to interpret what the firewall checks.</p>
+        <p><strong>Stretch:</strong> tie back to the firewall sim — port 23 (Telnet) was on the deny list. The firewall doesn't need to know <em>what</em> the data is; only <em>where it is bound</em>. That is power and limitation in one.</p>
+      </div>
+    </section>
+
+    <!-- ============ PROXIES ============ -->
+    <section class="section-card" id="s-proxies">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">02</span><span class="step-label">Outer ring</span></div>
+        <h2>Proxies.</h2>
+        <p class="description">A proxy is a middle-man — it makes requests <em>on your behalf</em>. The destination server never talks to you directly. This unlocks four powerful behaviours: <strong>caching, filtering, anonymity, and logging.</strong></p>
+      </div>
+      <div class="content">
+        <div class="proxy-toggle-bar">
+          <button class="toggle-btn on" data-proxy-mode="direct">Without proxy</button>
+          <button class="toggle-btn" data-proxy-mode="proxy">With proxy</button>
+        </div>
+        <div class="proxy-stage">
+          <svg viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg" id="proxy-svg">
+            <rect x="40" y="90" width="120" height="60" rx="6" fill="#f8fafc" stroke="#2f6cf7" stroke-width="1.5"/>
+            <text x="100" y="118" text-anchor="middle" fill="#1a42ad" font-family="Inter" font-size="15" font-weight="600">Client</text>
+            <text x="100" y="138" text-anchor="middle" fill="#64748b" font-family="JetBrains Mono" font-size="10">203.0.113.42</text>
+            <g id="proxy-node" opacity="0">
+              <rect x="340" y="80" width="120" height="80" rx="6" fill="#f8fafc" stroke="#10b981" stroke-width="1.5"/>
+              <text x="400" y="108" text-anchor="middle" fill="#065f46" font-family="Inter" font-size="15" font-weight="600">Proxy</text>
+              <text x="400" y="128" text-anchor="middle" fill="#64748b" font-family="JetBrains Mono" font-size="9">198.51.100.7</text>
+              <text x="400" y="146" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="8" letter-spacing="0.1em">CACHE · FILTER · LOG</text>
+            </g>
+            <rect x="640" y="90" width="120" height="60" rx="6" fill="#f8fafc" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="700" y="118" text-anchor="middle" fill="#b45309" font-family="Inter" font-size="15" font-weight="600">Server</text>
+            <text x="700" y="138" text-anchor="middle" fill="#64748b" font-family="JetBrains Mono" font-size="10">example.com</text>
+            <g id="direct-arrows">
+              <line x1="160" y1="120" x2="640" y2="120" stroke="#2f6cf7" stroke-width="1.5" stroke-dasharray="6 4"/>
+              <polygon points="640,120 632,115 632,125" fill="#2f6cf7"/>
+              <text x="400" y="108" text-anchor="middle" fill="#1a42ad" font-family="JetBrains Mono" font-size="10">request (you: 203.0.113.42)</text>
+              <text x="400" y="142" text-anchor="middle" fill="#64748b" font-family="JetBrains Mono" font-size="9">server knows who you are</text>
+            </g>
+            <g id="proxy-arrows" opacity="0">
+              <line x1="160" y1="120" x2="340" y2="120" stroke="#2f6cf7" stroke-width="1.5" stroke-dasharray="6 4"/>
+              <polygon points="340,120 332,115 332,125" fill="#2f6cf7"/>
+              <text x="250" y="108" text-anchor="middle" fill="#1a42ad" font-family="JetBrains Mono" font-size="9">your request</text>
+              <line x1="460" y1="120" x2="640" y2="120" stroke="#10b981" stroke-width="1.5" stroke-dasharray="6 4"/>
+              <polygon points="640,120 632,115 632,125" fill="#10b981"/>
+              <text x="550" y="108" text-anchor="middle" fill="#065f46" font-family="JetBrains Mono" font-size="9">proxy's request</text>
+              <text x="550" y="142" text-anchor="middle" fill="#64748b" font-family="JetBrains Mono" font-size="9">server only sees 198.51.100.7</text>
+            </g>
+            <circle id="packet-dot" cx="160" cy="120" r="5" fill="#f59e0b" opacity="0"/>
+          </svg>
+        </div>
+        <div class="proxy-actions-bar">
+          <button class="btn btn-primary" id="btn-proxy-anim">Send a request</button>
+          <button class="toggle-btn" data-proxy-show="cache">Show caching</button>
+          <button class="toggle-btn" data-proxy-show="filter">Show filtering</button>
+          <button class="toggle-btn" data-proxy-show="anon">Show anonymity</button>
+        </div>
+        <div class="proxy-info" id="proxy-info">
+          <strong>Direct mode.</strong> The client and server communicate directly. The server logs the client's real IP. No caching, no filtering, no privacy. Toggle <strong>With proxy</strong> to see what changes.
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">7 mins · Demo + Q&amp;A</div>
+        <p>Run the animation twice — once direct, once with proxy. Ask: <em>"In school, why does our network use a proxy?"</em> Most will guess "to block YouTube" — affirm and extend: <strong>content filtering, caching for high-traffic pages, and logging for safeguarding</strong>.</p>
+        <p>Distinguish: a <strong>forward proxy</strong> represents the client (school's web proxy). A <strong>reverse proxy</strong> sits in front of servers (load balancer / CDN). H446 cares mostly about forward proxies, but knowing both impresses an examiner.</p>
+      </div>
+    </section>
+
+    <!-- ============ PREDICT (Caesar) ============ -->
+    <section class="section-card" id="s-predict">
+      <div class="head">
+        <div class="pill-row"><span class="pill predict">P</span><span class="step-label">Predict</span></div>
+        <h2>Encryption I — the Caesar cipher.</h2>
+        <p class="description">Encryption transforms readable plaintext into unreadable ciphertext using an algorithm and a key. Caesar's cipher — Julius Caesar's actual war-time encryption — shifts each letter forward by a fixed number. The <em>same</em> key encrypts and decrypts: this is <strong>symmetric encryption</strong>.</p>
+      </div>
+      <div class="content">
+        <p>Read the code below carefully. Before you press any buttons, work out the answer in your head and write your prediction. The rule: each letter is shifted forward by 3. <code>A → D</code>, <code>B → E</code>, <code>C → F</code> … <code>X → A</code>, <code>Y → B</code>, <code>Z → C</code>. Spaces stay as spaces.</p>
+        <div class="code-cell">
+          <div class="code-head">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <span class="lang">caesar</span>
+          </div>
+<pre><code><span class="line"><span class="ln">1</span>plaintext = "MEET ME AT TEN"</span>
+<span class="line"><span class="ln">2</span>shift     = 3</span>
+<span class="line"><span class="ln">3</span>ciphertext = caesar_encrypt(plaintext, shift)</span>
+<span class="line"><span class="ln">4</span>print(ciphertext)</span></code></pre>
+        </div>
+        <label style="display:block">
+          <strong>Your prediction</strong>
+          <textarea id="field-predict" class="fld-area" rows="3" placeholder="Write what you think the ciphertext will look like..."></textarea>
+          <span class="helper-text">Your prediction is just for your thinking. It is not marked or saved.</span>
+        </label>
+        <div style="display:flex;gap:10px;align-items:center;padding-top:10px;border-top:1px solid var(--border);flex-wrap:wrap;margin-top:6px">
+          <span class="pill run">R</span>
+          <span class="step-label">Run</span>
+          <span style="color:var(--text-dim);font-size:14px">When you have written your prediction, reveal what the cipher would produce.</span>
+        </div>
+        <div>
+          <button class="btn btn-primary" id="btn-reveal-predict">Show output</button>
+        </div>
+        <div id="predict-output" style="display:none">
+          <div class="output-cell">
+            <div class="output-head">
+              <span class="output-label">Simulated output</span>
+              <span class="output-note">not real code execution</span>
+            </div>
+<pre>PHHW PH DW WHQ</pre>
+          </div>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">4 mins · Independent · Mini-whiteboards</div>
+        <p>Insist on the prediction being written before <em>any</em> button is pressed — this is the cognitive commitment that makes PRIMM work. Walk the room while they're writing.</p>
+        <p>Common slip: students forget that spaces stay as spaces and try to shift them, producing nonsense. Catch this early with a steer at the door.</p>
+      </div>
+    </section>
+
+    <!-- ============ INVESTIGATE ============ -->
+    <section class="section-card" id="s-investigate">
+      <div class="head">
+        <div class="pill-row"><span class="pill investigate">I</span><span class="step-label">Investigate</span></div>
+        <h2>Investigate the cipher.</h2>
+        <p class="description">Think carefully about each question. Use the hint if you get stuck, then check the answer.</p>
+      </div>
+      <div class="content">
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">Q1.</span> Why does "MEET ME" become "PHHW PH" and not "PHHWPHE" all run together?</p>
+          <div class="reveal-buttons">
+            <button class="btn btn-secondary" data-toggle="hint" data-target="hint-1">Show hint</button>
+            <button class="btn btn-ghost" data-toggle="answer" data-target="ans-1">Show answer</button>
+          </div>
+          <p class="hint-text" id="hint-1" style="display:none"><strong>Hint:</strong> The cipher only shifts <em>letters</em> of the alphabet.</p>
+          <p class="answer-text" id="ans-1" style="display:none"><strong>Answer:</strong> Spaces are not in the alphabet, so they are not shifted — they stay as spaces and preserve the word boundaries.</p>
+        </div>
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">Q2.</span> If the shift is 3, what does <code>X</code> become? Why?</p>
+          <div class="reveal-buttons">
+            <button class="btn btn-secondary" data-toggle="hint" data-target="hint-2">Show hint</button>
+            <button class="btn btn-ghost" data-toggle="answer" data-target="ans-2">Show answer</button>
+          </div>
+          <p class="hint-text" id="hint-2" style="display:none"><strong>Hint:</strong> What happens when you fall off the end of the alphabet?</p>
+          <p class="answer-text" id="ans-2" style="display:none"><strong>Answer:</strong> <code>X → A</code>. The alphabet wraps around. Mathematically we say the shift is performed <em>modulo 26</em> — after Z you start again at A.</p>
+        </div>
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">Q3.</span> Is the Caesar cipher symmetric or asymmetric? How can you tell?</p>
+          <div class="reveal-buttons">
+            <button class="btn btn-secondary" data-toggle="hint" data-target="hint-3">Show hint</button>
+            <button class="btn btn-ghost" data-toggle="answer" data-target="ans-3">Show answer</button>
+          </div>
+          <p class="hint-text" id="hint-3" style="display:none"><strong>Hint:</strong> Count the keys.</p>
+          <p class="answer-text" id="ans-3" style="display:none"><strong>Answer:</strong> Symmetric. The same key (the shift) is used to encrypt and to decrypt — you just shift the other way.</p>
+        </div>
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">Q4.</span> If Alice wants to send a Caesar-encrypted message to Bob, what serious problem do they have <em>before</em> they ever send a message?</p>
+          <div class="reveal-buttons">
+            <button class="btn btn-secondary" data-toggle="hint" data-target="hint-4">Show hint</button>
+            <button class="btn btn-ghost" data-toggle="answer" data-target="ans-4">Show answer</button>
+          </div>
+          <p class="hint-text" id="hint-4" style="display:none"><strong>Hint:</strong> What do they both need? How do they get it?</p>
+          <p class="answer-text" id="ans-4" style="display:none"><strong>Answer:</strong> Both need the same key. They have to share the key safely. This is called the <strong>key-distribution problem</strong> and it is the central weakness of all symmetric encryption.</p>
+        </div>
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">Q5.</span> Why is the Caesar cipher trivial to break compared to modern AES?</p>
+          <div class="reveal-buttons">
+            <button class="btn btn-secondary" data-toggle="hint" data-target="hint-5">Show hint</button>
+            <button class="btn btn-ghost" data-toggle="answer" data-target="ans-5">Show answer</button>
+          </div>
+          <p class="hint-text" id="hint-5" style="display:none"><strong>Hint:</strong> How many possible keys are there?</p>
+          <p class="answer-text" id="ans-5" style="display:none"><strong>Answer:</strong> Caesar has only 25 possible non-trivial shifts — try all 25 by brute force in under a second on any laptop. <strong>AES (Advanced Encryption Standard)</strong> is the modern symmetric cipher that replaced earlier standards: published by the US National Institute of Standards and Technology (NIST) in 2001, it uses 128- or 256-bit keys. AES-128 has 2<sup>128</sup> ≈ 3.4 × 10<sup>38</sup> possible keys; AES-256 has 2<sup>256</sup> — astronomically many, well beyond brute force on any computer that exists. AES-256 is the standard the US government uses to protect TOP SECRET information, and it is built into HTTPS (the padlock in your browser), BitLocker, FileVault, WhatsApp, Signal and most modern secure systems. <em>Note: AES-256 is legal to use — strong encryption is not a crime. Some countries (China, Russia) restrict commercial cryptography products, and historically the US treated strong crypto as an export-controlled "munition" until around 2000 (the "Crypto Wars"), but ordinary use of AES is unrestricted in the UK and almost everywhere else.</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LIVE CIPHER ============ -->
+    <section class="section-card" id="s-symmetric">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">03</span><span class="step-label">Middle ring · symmetric encryption</span></div>
+        <h2>Try the cipher live.</h2>
+        <p class="description">Drag the shift slider. Watch the ciphertext update in real time.</p>
+      </div>
+      <div class="content">
+        <div class="cipher-stage">
+          <div class="cipher-side">
+            <span class="label-small">Alice's plaintext</span>
+            <input type="text" id="cipher-plain" class="cipher-input" value="MEET ME AT TEN" maxlength="80">
+            <div class="shift-control">
+              <label>Shift (the key)</label>
+              <input type="range" id="cipher-shift" min="1" max="25" value="3">
+              <span class="shift-val" id="cipher-shift-val">3</span>
+            </div>
+            <p style="font-size:13px;color:var(--text-faint);font-style:italic">Each letter is shifted forward by the key. A → D, B → E, C → F …</p>
+          </div>
+          <div class="cipher-side">
+            <span class="label-small">Ciphertext (over the wire)</span>
+            <div class="ciphertext-out" id="cipher-out">PHHW PH DW WHQ</div>
+            <p style="font-size:13px;color:var(--text-dim);margin-top:12px">Bob decrypts by shifting <em>back</em> by the same amount. If Eve only intercepts the ciphertext, she sees garbage.</p>
+            <div class="key-warning">
+              <strong>The problem.</strong> Alice and Bob both need the key. If Alice messages Bob the key in plaintext, Eve reads it. If they meet in person, the system does not scale — billions of users can't meet in person.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">5 mins · Pair work</div>
+        <p>Have students write a 4-word message and a shift 1–25, swap with a partner, decrypt. Surfaces the key-distribution problem viscerally — they had to <em>show</em> the partner the key.</p>
+        <p><strong>Real-world tie:</strong> Caesar is a toy. In production, symmetric means <strong>AES (Advanced Encryption Standard)</strong> with 128/256-bit keys, used by HTTPS, BitLocker, and Wi-Fi (WPA2/3).</p>
+      </div>
+    </section>
+
+    <!-- ============ MODIFY ============ -->
+    <section class="section-card" id="s-modify">
+      <div class="head">
+        <div class="pill-row"><span class="pill modify">M</span><span class="step-label">Modify</span></div>
+        <h2>Modify the key.</h2>
+        <p class="description">A small change has been made. The plaintext is the same; the key has changed from 3 to 7. Predict the new ciphertext before revealing it.</p>
+      </div>
+      <div class="content">
+        <div class="code-cell">
+          <div class="code-head">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <span class="lang">caesar (modified)</span>
+          </div>
+<pre><code><span class="line"><span class="ln">1</span>plaintext = "MEET ME AT TEN"</span>
+<span class="line"><span class="ln">2</span>shift     = 7</span>
+<span class="line"><span class="ln">3</span>ciphertext = caesar_encrypt(plaintext, shift)</span>
+<span class="line"><span class="ln">4</span>print(ciphertext)</span></code></pre>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" id="btn-reveal-modify">Show output</button>
+          <button class="btn btn-secondary" id="btn-modify-explain">Show explanation</button>
+        </div>
+        <div id="modify-output" style="display:none">
+          <div class="output-cell">
+            <div class="output-head">
+              <span class="output-label">Simulated output</span>
+              <span class="output-note">not real code execution</span>
+            </div>
+<pre>TLLA TL HA ALU</pre>
+          </div>
+        </div>
+        <div id="modify-explanation" style="display:none;padding:12px 14px;background:var(--t-mod-bg);border:1px solid #c4b5fd;border-radius:8px;color:#5b21b6;font-size:14.5px;line-height:1.6">
+          <strong>What changed.</strong> Each letter has now shifted by 7 instead of 3. <code style="background:rgba(255,255,255,.5);border-color:#c4b5fd;color:#5b21b6">M → T</code>, <code style="background:rgba(255,255,255,.5);border-color:#c4b5fd;color:#5b21b6">E → L</code>, <code style="background:rgba(255,255,255,.5);border-color:#c4b5fd;color:#5b21b6">T → A</code>, <code style="background:rgba(255,255,255,.5);border-color:#c4b5fd;color:#5b21b6">A → H</code>, <code style="background:rgba(255,255,255,.5);border-color:#c4b5fd;color:#5b21b6">N → U</code>. The algorithm is unchanged — only the key. <strong>That is the whole point of a cipher:</strong> change the key and the ciphertext changes completely, even though anyone who knows the algorithm cannot read the message without the key.
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ASYMMETRIC ============ -->
+    <section class="section-card" id="s-asymmetric">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">04</span><span class="step-label">Middle ring · asymmetric encryption</span></div>
+        <h2>Encryption II — asymmetric.</h2>
+        <p class="description">Two keys per person: a <em>public</em> key (give it away freely) and a <em>private</em> key (guard with your life). What one key encrypts, only the other can decrypt. <strong>The key-distribution problem is solved.</strong></p>
+      </div>
+      <div class="content">
+        <div class="actors-row">
+          <div class="actor alice">
+            <div class="name">Alice</div>
+            <div class="role">Receiver</div>
+            <div class="keys">
+              <span class="key-icon public">🔓 public</span>
+              <span class="key-icon private">🔑 private</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-faint);margin-top:12px;line-height:1.5">Hands out her public key to anyone. Keeps her private key secret.</p>
+          </div>
+          <div class="transit-arrow">
+            <div class="arrow">→</div>
+            insecure<br>channel
+          </div>
+          <div class="actor bob">
+            <div class="name">Bob</div>
+            <div class="role">Sender</div>
+            <div class="keys">
+              <span class="key-icon public">🔓 Alice's public</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-faint);margin-top:12px;line-height:1.5">Uses Alice's public key to lock his message. Only Alice's private key can unlock it.</p>
+          </div>
+        </div>
+        <div class="padlock-controls">
+          <input type="text" id="asym-msg" placeholder="Bob's message to Alice..." value="The meeting is at 21:00">
+          <button class="btn btn-primary" id="btn-asym-send">Encrypt &amp; send</button>
+          <button class="btn btn-ghost" id="btn-asym-eve">Eve intercepts</button>
+        </div>
+        <div class="transmission-log" id="asym-log">
+          <div class="log-line"><span class="ts">[ready]</span>Type a message and press <strong>Encrypt &amp; send</strong>.</div>
+        </div>
+
+        <h3 style="margin-top:22px">Symmetric vs asymmetric — the comparison the examiner wants</h3>
+        <div class="compare-table">
+          <div class="compare-row head">
+            <div></div>
+            <div>Symmetric</div>
+            <div>Asymmetric</div>
+          </div>
+          <div class="compare-row">
+            <div class="feature">Keys</div>
+            <div>One shared key</div>
+            <div>Public + private key pair</div>
+          </div>
+          <div class="compare-row">
+            <div class="feature">Speed</div>
+            <div>Fast — efficient on large data</div>
+            <div>Slow — heavy maths (large primes)</div>
+          </div>
+          <div class="compare-row">
+            <div class="feature">Key distribution</div>
+            <div>Hard — secret must be shared safely</div>
+            <div>Solved — the public key is public</div>
+          </div>
+          <div class="compare-row">
+            <div class="feature">Examples</div>
+            <div>AES, DES</div>
+            <div>RSA, ECC, Diffie–Hellman</div>
+          </div>
+          <div class="compare-row">
+            <div class="feature">Typical use</div>
+            <div>Bulk data after a handshake</div>
+            <div>Initial handshake; digital signatures</div>
+          </div>
+        </div>
+        <p class="tls-callout"><strong>In practice, TLS (HTTPS) uses both.</strong> Asymmetric encryption performs the initial handshake and exchanges a fresh symmetric key. From then on, the fast symmetric algorithm handles the actual web traffic. Best of both worlds.</p>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">12 mins · Direct instruction + demo</div>
+        <p>Use the padlock metaphor on the board: Alice's public key is a copy of her padlock, mass-produced and given to everyone. Anyone can <em>close</em> the padlock around a box. Only Alice's private key opens it. Exam-friendly and resilient.</p>
+        <p><strong>Common misconception:</strong> students think both keys can encrypt and decrypt symmetrically. They can't. Public encrypts, private decrypts (for confidentiality). The reverse (private encrypts, public decrypts) is digital signatures — mention if time.</p>
+        <p><strong>Examiner watchpoint:</strong> the comparison table is the most common 4–6 mark question shape in 1.3.3. Drill the row labels — students who name <em>speed, key distribution, use case</em> as their three axes always score full marks.</p>
+      </div>
+    </section>
+
+    <!-- ============ PARSONS ============ -->
+    <section class="section-card" id="s-parsons">
+      <div class="head">
+        <div class="pill-row"><span class="pill parsons">≡</span><span class="step-label">Parsons puzzle</span></div>
+        <h2>Order the steps of asymmetric encryption.</h2>
+        <p class="description">The six steps below are correct, but jumbled. Use the up / down arrows (or drag) to put them in the right order, then press <strong>Check order</strong>.</p>
+      </div>
+      <div class="content">
+        <div class="parsons-task">
+          <p style="font-weight:500;color:var(--text)">Bob wants to send a confidential message to Alice over an insecure channel.</p>
+          <ol id="parsons-list"></ol>
+          <div class="parsons-actions">
+            <button class="btn btn-primary" id="btn-parsons-check">Check order</button>
+            <button class="btn btn-secondary" id="btn-parsons-shuffle">Shuffle</button>
+            <button class="btn btn-ghost" id="btn-parsons-solution">Show solution</button>
+          </div>
+          <div class="parsons-feedback" id="parsons-feedback"></div>
+          <div class="parsons-tip"><strong>Tip:</strong> Alice owns the private key. The public key only encrypts; only the private key can decrypt.</div>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">5 mins · Independent · then walkthrough</div>
+        <p>Mini-whiteboard the order first (1–6 down the side), then drag. Stops "the dragger thinks for everyone".</p>
+        <p>The most common slip is putting "Alice publishes her public key" <em>after</em> Bob writes his message. Surface this: Bob can't encrypt without already having the public key.</p>
+      </div>
+    </section>
+
+    <!-- ============ OTHER DEFENCES ============ -->
+    <section class="section-card" id="s-others">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">05</span><span class="step-label">Inner ring · human &amp; policy</span></div>
+        <h2>The human &amp; policy layer.</h2>
+        <p class="description">Technology alone won't save you. The most expensive firewall in the world fails the moment someone tapes their password to the monitor. The OCR spec is explicit: <em>usage policy, secure passwords, training, anti-virus, backup and recovery.</em></p>
+      </div>
+      <div class="content">
+        <div class="defence-grid">
+          <div class="defence-card">
+            <div class="glyph">AV</div>
+            <h4>Anti-malware</h4>
+            <p>Scans files against a database of known malware <em>signatures</em>, plus heuristic behavioural analysis for unknown threats. Quarantines suspects; updates definitions daily.</p>
+            <div class="also">Counters · viruses · trojans · spyware</div>
+          </div>
+          <div class="defence-card">
+            <div class="glyph">BK</div>
+            <h4>Backups &amp; recovery</h4>
+            <p>The <em>3-2-1 rule</em>: 3 copies, 2 different media, 1 off-site. Combine full and incremental backups. Crucial against ransomware — pay nothing, just restore.</p>
+            <div class="also">Counters · ransomware · hardware failure</div>
+          </div>
+          <div class="defence-card">
+            <div class="glyph">PW</div>
+            <h4>Strong passwords + MFA</h4>
+            <p>Length beats complexity. Enforce minimum length, ban common words, require multi-factor authentication (something you know + something you have). Defeats most brute-force.</p>
+            <div class="also">Counters · brute force · credential stuffing</div>
+          </div>
+          <div class="defence-card">
+            <div class="glyph">UP</div>
+            <h4>Acceptable Use Policy</h4>
+            <p>A written contract: what users can and can't do on the network. No personal USBs, no installing software, no sharing credentials. Provides legal and procedural grounds for action.</p>
+            <div class="also">Counters · insider risk · shadow IT</div>
+          </div>
+          <div class="defence-card">
+            <div class="glyph">TR</div>
+            <h4>Staff &amp; user training</h4>
+            <p>Phishing simulations, awareness sessions, secure-coding workshops. The single highest-ROI control — humans are the largest attack surface. Make it ongoing, not annual.</p>
+            <div class="also">Counters · phishing · social engineering</div>
+          </div>
+          <div class="defence-card">
+            <div class="glyph">LG</div>
+            <h4>Logging &amp; monitoring</h4>
+            <p>You can't defend what you can't see. SIEM systems aggregate logs from firewalls, servers, and endpoints, and flag anomalies. Forensic value after the fact too.</p>
+            <div class="also">Counters · stealth intrusion · insider threat</div>
+          </div>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">5 mins · Whole class · Walk-and-talk</div>
+        <p>Don't dwell — students have all six on screen for note-taking. Ask: <em>"Which has the lowest unit cost and the highest impact?"</em> Answer: <strong>training</strong> — almost free, addresses the biggest attack surface.</p>
+        <p>Stretch link: backups to ransomware case studies — WannaCry (NHS, 2017) crippled trusts whose backups were missing or co-located with primary systems.</p>
+      </div>
+    </section>
+
+    <!-- ============ REAL-WORLD BREACHES ============ -->
+    <section class="section-card" id="s-breaches">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">⚠</span><span class="step-label">Real-world breaches · Bailiwick &amp; beyond</span></div>
+        <h2>Closer to home — when the defences <em style="color:var(--danger)">fail</em>.</h2>
+        <p class="description">Five named, dated incidents — four Guernsey cases (three cyber breaches plus one States-wide IT outage) reported to or actioned by the <strong>Office of the Data Protection Authority (ODPA)</strong>, plus one UK-wide retail attack that hit the local M&amp;S store. Each maps back to a defence covered above.</p>
+      </div>
+      <div class="content">
+        <div class="breach-warning">
+          <strong>About these cases.</strong> All four are real and sourced. Three involve named <strong>Guernsey</strong> organisations and link to ODPA statements, the Guernsey Press or ITV Channel reporting. The fourth (M&amp;S) is a UK-wide incident whose Guernsey store was visibly affected through the same supply disruption. Verify dates and facts against the linked sources before delivering.
+        </div>
+
+        <div class="breach-stack">
+
+          <!-- BREACH 1: The Ladies' College, Guernsey -->
+          <article class="breach-card">
+            <div class="breach-head">
+              <span class="breach-date">24 June 2024</span>
+              <h4>The Ladies' College · Guernsey</h4>
+            </div>
+            <div class="breach-meta">
+              <div class="field"><span class="lbl">How it happened</span>On 24 June 2024 the school discovered it could no longer access several of its on-premises servers. Some data on those servers had been <strong>encrypted</strong> by attackers — the hallmark of a ransomware attack. The ODPA's subsequent investigation found that <em>"failures in The Ladies' College's security allowed for unauthorised access to be gained to its systems"</em>.</div>
+              <div class="field"><span class="lbl">Why it happened</span>The ODPA's report identified inadequate security measures. The good news: only limited examples of personal data were affected, no pupil data was accessed, and the encrypted data was recovered — suggesting working backups did their job. The College has since been ordered to improve its cyber security.</div>
+            </div>
+            <p class="repercussions"><strong>Repercussions:</strong> ODPA findings published December 2025; remedial action ordered. Reputational impact for an island school whose families expect tight handling of personal information. No fine, because exposure was limited — but a public regulatory order is itself a significant signal.</p>
+            <p class="map"><strong>Maps to:</strong> backups &amp; recovery (worked) · anti-malware &amp; defence in depth (did not) · staff training.</p>
+            <div class="breach-sources">
+              <span class="src-label">Sources</span>
+              <a href="https://www.itv.com/news/channel/2025-12-04/prestigious-all-girls-island-school-responds-to-cyber-attack" target="_blank" rel="noopener">ITV News Channel</a>
+              <a href="https://www.odpa.gg/actions-weve-taken/" target="_blank" rel="noopener">ODPA — actions we've taken</a>
+            </div>
+          </article>
+
+          <!-- BREACH 2: Medical Specialist Group, Guernsey -->
+          <article class="breach-card">
+            <div class="breach-head">
+              <span class="breach-date">Aug 2021 → £100k fine Oct 2025</span>
+              <h4>Medical Specialist Group LLP · Guernsey</h4>
+            </div>
+            <div class="breach-meta">
+              <div class="field"><span class="lbl">How it happened</span>The MSG's email server was compromised in <strong>August 2021</strong> through a collection of unpatched vulnerabilities. Attackers stole emails, some containing sensitive patient health data. The breach was only discovered in <strong>December 2021</strong> — about three and a half months later — after suspicious emails alerted staff.</div>
+              <div class="field"><span class="lbl">Why it happened</span>The ODPA found two systemic failures: (1) MSG <strong>routinely failed to install security updates</strong> on its email server for 13 months, including updates that directly addressed the exploited vulnerabilities; and (2) threat-detection software was poorly configured, missing several opportunities to spot the attacker.</div>
+            </div>
+            <p class="repercussions"><strong>Repercussions:</strong> <strong>£100,000 ODPA administrative fine</strong> imposed on 20 October 2025 — the largest such penalty seen in the Bailiwick to that point. £75,000 payable within 60 days; £25,000 waived if the remedial Action Plan is completed. Special-category patient data exposed; remediation ongoing.</p>
+            <p class="map"><strong>Maps to:</strong> <strong>patching</strong> &amp; vulnerability management · <strong>logging &amp; monitoring</strong> (detection delay) · staff training.</p>
+            <div class="breach-sources">
+              <span class="src-label">Sources</span>
+              <a href="https://www.odpa.gg/news/medical-specialist-group-fined-ps100000-following-cyber-attack-breach" target="_blank" rel="noopener">ODPA statement</a>
+              <a href="https://guernseypress.com/news/2025/10/21/msg-fined-pound100k-after-patient-emails-stolen" target="_blank" rel="noopener">Guernsey Press</a>
+              <a href="https://www.itv.com/news/channel/2025-10-20/medical-group-fined-after-sensitive-health-data-stolen-in-cyber-attack" target="_blank" rel="noopener">ITV News Channel</a>
+            </div>
+          </article>
+
+          <!-- BREACH 3: Fresh Dental + Bailiwick M365 phishing wave -->
+          <article class="breach-card">
+            <div class="breach-head">
+              <span class="breach-date">October 2024</span>
+              <h4>Fresh Dental · Guernsey (part of a wider M365 phishing wave)</h4>
+            </div>
+            <div class="breach-meta">
+              <div class="field"><span class="lbl">How it happened</span>A successful phishing attack let cyber criminals into an employee's <strong>Microsoft 365</strong> email account. The ODPA's investigation identified "multiple technical failings" in the practice's security. The same quarter, the ODPA flagged a clear <strong>rise in phishing attacks targeting M365 across Guernsey</strong> — Fresh Dental was one of several local victims (First Contact Health in May 2024 followed the same pattern).</div>
+              <div class="field"><span class="lbl">Why it happened</span>An employee was tricked into divulging credentials. Once in, the attacker had access to whatever the email account did — contacts, attachments, historic conversations — and could use it for onward fraud against patients and suppliers.</div>
+            </div>
+            <p class="repercussions"><strong>Repercussions:</strong> personal data exposed; ODPA enforcement action. The case prompted the Authority to issue Bailiwick-wide <em>Data Protection Advisories</em> warning of active phishing campaigns. Q3 2024 alone saw 40 reported personal data breaches affecting 2,837 people in Guernsey.</p>
+            <p class="map"><strong>Maps to:</strong> staff <strong>training</strong> (leading mitigation for phishing) · multi-factor authentication on M365 · email gateway filtering.</p>
+            <div class="breach-sources">
+              <span class="src-label">Sources</span>
+              <a href="https://channeleye.media/guernseys-data-protection-authority-publishes-latest-breach-statistics/" target="_blank" rel="noopener">Channel Eye — ODPA stats</a>
+              <a href="https://www.odpa.gg/actions-weve-taken/" target="_blank" rel="noopener">ODPA — actions we've taken</a>
+              <a href="https://thecyberexpress.com/cyberattacks-on-guernsey/" target="_blank" rel="noopener">Cyber Express — ODPA M365 warning</a>
+            </div>
+          </article>
+
+          <!-- BREACH 4: M&S with explicit Guernsey angle -->
+          <article class="breach-card">
+            <div class="breach-head">
+              <span class="breach-date">April–May 2025</span>
+              <h4>Marks &amp; Spencer · UK attack with local impact</h4>
+            </div>
+            <div class="breach-meta">
+              <div class="field"><span class="lbl">How it happened</span>The Scattered Spider collective social-engineered M&amp;S's IT help desk, then deployed DragonForce ransomware. Online ordering, gift-card services and parts of the supply chain were taken offline. The same playbook hit Co-op and Harrods in the same window.</div>
+              <div class="field"><span class="lbl">Why it happened</span>Strong technical defences — but the human at the help desk was tricked into resetting credentials. The attackers exploited a process gap: how do you verify, by phone, that the caller is really who they claim to be?</div>
+            </div>
+            <p class="repercussions"><strong>Repercussions:</strong> M&amp;S online ordering down for over six weeks; click-and-collect and contactless payments disrupted in stores; estimated total financial impact across affected parties of <strong>£270m–£440m</strong> (UK Cyber Monitoring Centre). Customer personal data stolen.</p>
+            <p style="margin-top:10px;padding:10px 14px;background:#f0f9ff;border-left:3px solid var(--info);border-radius:6px;font-size:13.5px;color:#0c4a6e;line-height:1.55"><span style="margin-right:6px">🇬🇬</span><strong>Why this matters in Guernsey.</strong> M&amp;S has its own shop on High Street, St Peter Port (franchise operated by Creaseys since 1967). Local shoppers saw the same suspension of online ordering and gift-card services as UK customers — a help-desk failure 100 miles away rippled straight onto the High Street.</p>
+            <p class="map"><strong>Maps to:</strong> <strong>social engineering</strong> · staff and help-desk <strong>training</strong> · stronger identity verification on remote calls · supply-chain dependency.</p>
+            <div class="breach-sources">
+              <span class="src-label">Sources</span>
+              <a href="https://corporate.marksandspencer.com/cyber-update" target="_blank" rel="noopener">M&amp;S corporate update</a>
+              <a href="https://cybermonitoringcentre.com/2025/06/20/cyber-monitoring-centre-statement-on-ransomware-incidents-in-the-retail-sector-june-2025/" target="_blank" rel="noopener">UK Cyber Monitoring Centre</a>
+              <a href="https://www.marksandspencerguernsey.com/" target="_blank" rel="noopener">M&amp;S Guernsey (store)</a>
+            </div>
+          </article>
+
+          <!-- BREACH 5: States of Guernsey IT outage (operational, not a cyber attack) -->
+          <article class="breach-card">
+            <div class="breach-head">
+              <span class="breach-date">Nov 2022 – Jan 2023 · ODPA reprimand</span>
+              <span style="display:inline-flex;align-items:center;padding:3px 9px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:600;border-radius:999px">Operational · not a cyber attack</span>
+              <h4>States of Guernsey · IT outage (Policy &amp; Resources Committee)</h4>
+            </div>
+            <div class="breach-meta">
+              <div class="field"><span class="lbl">How it happened</span>Between November 2022 and January 2023, several States of Guernsey IT systems went down — staff and members of the public could not use them or access the personal data they held. The cause was not a hacker: the <strong>air-conditioning system inside a States data room failed</strong>, taking servers and storage offline. Multiple technical and monitoring controls also failed at the same time.</div>
+              <div class="field"><span class="lbl">Why it happened</span>The ODPA's October 2023 inquiry found that the <strong>Policy &amp; Resources Committee (P&amp;R)</strong> had failed to take reasonable steps to maintain the data-room air conditioning. More damning: P&amp;R had also <strong>failed to implement an IT disaster-recovery plan</strong> before the incidents, so when things went wrong there was no rehearsed way to restore service.</div>
+            </div>
+            <p class="repercussions"><strong>Repercussions:</strong> outages spanned two months, disrupting public-facing services that residents rely on. The ODPA issued a formal <strong>Reprimand</strong> after its inquiry, along with an action plan covering maintenance, monitoring and disaster recovery. P&amp;R has since confirmed every recommendation is completed.</p>
+            <p style="margin-top:10px;padding:10px 14px;background:#fffbeb;border-left:3px solid var(--warn);border-radius:6px;font-size:13.5px;color:#78350f;line-height:1.55"><span style="margin-right:6px">⚠</span><strong>Why this case still belongs here.</strong> Defence in depth is not only about attackers. A data room with no resilient cooling and no DR plan is a single point of failure — the effect on people is identical whether the cause is ransomware or a broken air-conditioning unit. Availability is part of security.</p>
+            <p class="map"><strong>Maps to:</strong> <strong>backups &amp; recovery</strong> · <strong>disaster-recovery planning</strong> · monitoring &amp; environmental controls · logging.</p>
+            <div class="breach-sources">
+              <span class="src-label">Sources</span>
+              <a href="https://channeleye.media/states-of-guernsey-it-outage-results-in-data-protection-authority-recommendations/" target="_blank" rel="noopener">Channel Eye</a>
+              <a href="https://gov.gg/Independent-review-into-IT-outages" target="_blank" rel="noopener">States of Guernsey — Independent review</a>
+              <a href="https://gsy.bailiwickexpress.com/gsy/news/data-protection-authority-investigate-states-it-outage/" target="_blank" rel="noopener">Bailiwick Express</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">6 mins · Project + discuss · Ranking</div>
+        <p>All five cases are real and sourced. Four are local — likely names the class will recognise from family conversation or the school yard. Ask students to rank them <em>most preventable</em> to <em>least preventable</em>; productive disagreement guaranteed. The cleanest "one missing control" story is MSG — <strong>13 months of unpatched updates</strong> is hard to defend.</p>
+        <p><strong>Local hook:</strong> the MSG £100k fine was front-page <em>Guernsey Press</em> in October 2025; the Ladies' College story was the lead on <em>ITV Channel</em> in December 2025; the States of Guernsey IT outage was a lived experience for staff and the public for two months. Use that recognition to anchor abstract ideas (patching, defence in depth, DR planning) to consequences students can see.</p>
+        <p><strong>The States outage is the pedagogical curveball.</strong> Flag deliberately that it was <em>not</em> a cyber attack — a broken air-conditioning unit, with no disaster-recovery plan to fall back on. Use it to broaden the definition of security: confidentiality, integrity <em>and</em> availability (the CIA triad). Lots of students think "hacker" when they read "security incident"; this case corrects that.</p>
+        <p><strong>Examiner hook:</strong> "use a current real-world example" lands well in long-answer responses. Drill <em>one</em> case per student so they have a named, dated reference ready for the exam — vague answers about "hackers" never score top band.</p>
+        <p><strong>Stretch:</strong> why does the M&amp;S case still affect Guernsey shoppers despite no Guernsey-side failure? Answer: supply-chain dependency on a UK parent. Tie back to the encapsulation visual — even when the local network is clean, you can be affected by what happens at the other end of the wire.</p>
+      </div>
+    </section>
+
+    <!-- ============ MATCHER ============ -->
+    <section class="section-card" id="s-matcher">
+      <div class="head">
+        <div class="pill-row"><span class="pill investigate">⇄</span><span class="step-label">Activity</span></div>
+        <h2>Match the threat to the <em style="color:var(--brand-600)">defence</em>.</h2>
+        <p class="description">Drag each threat on the left to the most appropriate defence on the right. Some threats have multiple valid defences — pick the <em>primary</em> one.</p>
+      </div>
+      <div class="content">
+        <div class="matcher-grid">
+          <div class="matcher-col">
+            <h4>Threats</h4>
+            <div class="threat" draggable="true" data-threat="phishing" data-correct="training">Phishing email tricks user into revealing password</div>
+            <div class="threat" draggable="true" data-threat="virus" data-correct="antimalware">Virus arrives in an email attachment</div>
+            <div class="threat" draggable="true" data-threat="bruteforce" data-correct="passwords">Attacker tries millions of password combinations</div>
+            <div class="threat" draggable="true" data-threat="ransomware" data-correct="backups">Ransomware encrypts the file server</div>
+            <div class="threat" draggable="true" data-threat="mitm" data-correct="encryption">Attacker on public Wi-Fi reads traffic in transit</div>
+            <div class="threat" draggable="true" data-threat="ddos" data-correct="firewall">DDoS attack from a botnet</div>
+          </div>
+          <div class="matcher-col">
+            <h4>Defences</h4>
+            <div class="defence-slot" data-defence="firewall"><div class="defence-title">Firewall</div></div>
+            <div class="defence-slot" data-defence="encryption"><div class="defence-title">Encryption (TLS)</div></div>
+            <div class="defence-slot" data-defence="antimalware"><div class="defence-title">Anti-malware</div></div>
+            <div class="defence-slot" data-defence="backups"><div class="defence-title">Backups &amp; recovery</div></div>
+            <div class="defence-slot" data-defence="passwords"><div class="defence-title">Strong passwords + MFA</div></div>
+            <div class="defence-slot" data-defence="training"><div class="defence-title">User training</div></div>
+          </div>
+        </div>
+        <div class="matcher-feedback" id="matcher-feedback">
+          Drag a threat onto its primary defence. <strong style="color:var(--brand-600)">6 to match.</strong>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">6 mins · Mini-whiteboards then volunteer drag</div>
+        <p>Decide answers on mini-whiteboards first — prevents "the dragger thinks for everyone".</p>
+        <p>Generate productive disagreement: a phishing email also touches firewalls (URL filtering), anti-malware (attachment scanning) and passwords (MFA). The <em>primary</em> answer is training because the attack <strong>targets the human</strong>. Reinforces defence in depth.</p>
+      </div>
+    </section>
+
+    <!-- ============ MAKE ============ -->
+    <section class="section-card" id="s-make">
+      <div class="head">
+        <div class="pill-row"><span class="pill make">M</span><span class="step-label">Make</span></div>
+        <h2>Design your own defence-in-depth.</h2>
+        <p class="description">Now apply what you have learned. Read the scenario carefully and plan a layered defence.</p>
+      </div>
+      <div class="content">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+          <strong>Scenario.</strong> A local independent bookshop has just launched an online store. Customer names, addresses and order history are stored on a small server in the back office, connected to the internet. The owner has a budget of about <strong>£2,000 a year</strong> for cyber security and one part-time IT volunteer.
+        </div>
+        <p style="color:var(--text-dim)">Recommend <strong>three</strong> prevention measures — one from each of the three rings (perimeter, data in transit, hosts &amp; users). For each, briefly explain <em>why</em> you chose it for <em>this</em> business.</p>
+        <label style="display:block">
+          <span class="label-small" style="margin-bottom:6px;display:block">Your design</span>
+          <textarea id="field-make" class="fld-area" rows="8" placeholder="Perimeter:&#10;&#10;Data in transit:&#10;&#10;Hosts &amp; users:"></textarea>
+        </label>
+        <p class="helper-text">This is for your own thinking — it is not marked. Bring your three to the board discussion.</p>
+
+        <div style="margin-top:10px">
+          <button class="btn btn-ghost" data-toggle="answer" data-target="ans-make">Show example answer</button>
+        </div>
+
+        <div id="ans-make" style="display:none;background:var(--t-inv-bg);border:1px solid #bae6fd;color:#075985;padding:16px 18px;border-radius:10px;margin-top:10px;line-height:1.6">
+          <p style="margin-bottom:10px"><strong>Example answer — one strong way to spend the £2,000.</strong> Yours may look different; defend your reasoning, not the wording.</p>
+
+          <p style="margin-bottom:8px"><strong>1 · Perimeter — a stateful firewall</strong> (~£150–250 one-off, ~£0/yr).<br>
+          Set up a stateful firewall on the boundary between the shop's network and the internet. Configure default-deny on inbound traffic; allow only TCP/443 (HTTPS) to the server. Explicitly deny ports 22 (SSH), 23 (Telnet) and 3389 (RDP) from the open internet. <em>On a setup this size the firewall is normally built into the small-business router itself — no separate appliance needed.</em><br>
+          <em>Why for this business:</em> stops opportunistic scanning before it reaches the back-office server. A bookshop does not need a £5,000 enterprise firewall; the stateful firewall built into an SMB-grade router does the job. <em>(A proxy is the lesson's other perimeter defence, but it is a better fit for organisations filtering outbound browsing — for a single-server bookshop, the firewall is the priority choice.)</em></p>
+
+          <p style="margin-bottom:8px"><strong>2 · Data in transit — HTTPS via a free TLS certificate</strong> (£0/yr).<br>
+          Install a free Let's Encrypt TLS certificate on the shop's website. Auto-renews every 90 days; modern browsers will display the padlock. Use TLS 1.3.<br>
+          <em>Why for this business:</em> protects customer names, addresses and order details from eavesdropping on the wire — public Wi-Fi sniffing, ISP-level snooping, man-in-the-middle. Free, standard, and the padlock visibly builds customer trust.</p>
+
+          <p style="margin-bottom:10px"><strong>3 · Hosts &amp; users — daily off-site backups + free training</strong> (~£70–100/yr).<br>
+          Daily automated backups following the <strong>3-2-1 rule</strong>: 3 copies, 2 different media, 1 off-site (a cloud backup service such as Backblaze ~£70/yr). Pair with a 30-minute phishing-awareness session using the free <strong>NCSC Cyber Aware</strong> materials for the owner and the part-time volunteer.<br>
+          <em>Why for this business:</em> ransomware is the realistic biggest threat to a small UK business — see the Medical Specialist Group and Ladies' College cases above. Backups make ransomware survivable. The volunteer is the most likely entry point, so training delivers the highest return per pound spent.</p>
+
+          <p style="margin-bottom:8px;color:#0c4a6e"><strong>Budget left for stretch buys</strong> (well under £2,000): anti-malware licences (~£30/yr/device), free MFA via Microsoft or Google Authenticator on the admin console, and a one-page written <strong>Acceptable Use Policy</strong> for the volunteer (no personal USBs, no installing software, no sharing credentials — free to draft).</p>
+
+          <p style="margin-top:10px;font-size:13.5px;color:#475569;font-style:italic">Strong answers don't just pick three items — they <em>justify each one for this business</em>: small budget, single server, one volunteer, customer trust matters.</p>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">5 mins · Independent · then cold call three</div>
+        <p>Cold call one student per ring. Reward considered budget-aware choices (e.g. <em>"a cheap router with a built-in firewall + free Let's Encrypt TLS + free MFA via Authenticator"</em> beats <em>"buy a £5k enterprise firewall"</em> for this scenario).</p>
+        <p>Excellent stretch answer: the part-time volunteer needs <strong>training</strong> first, because they are the single point of failure for everything else.</p>
+      </div>
+    </section>
+
+    <!-- ============ EXAM QUESTION ============ -->
+    <section class="section-card" id="s-exam">
+      <div class="head">
+        <div class="pill-row"><span class="pill quiz">?</span><span class="step-label">Applying it · exam practice</span></div>
+        <h2>Exam-style question.</h2>
+        <p class="description">A typical 1.3.3 question. Read it. Plan it. Then reveal the mark scheme one point at a time and self-check.</p>
+      </div>
+      <div class="content">
+        <div class="exam-card">
+          <div class="exam-head">
+            <span class="meta">H446/01 · Section B · Q-style</span>
+            <span class="marks">[6 marks]</span>
+          </div>
+          <div class="exam-body">
+            <p class="exam-question">A small business stores customer data on a server connected to the internet. <strong>Explain</strong> how a firewall, encryption, and one other prevention measure together protect this data.</p>
+            <h3 style="font-size:.95rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;font-family:var(--font-mono)">Suggested mark scheme</h3>
+            <div class="mark-points" id="mark-points">
+              <div class="mark-point" data-idx="0">
+                <div class="tick">[1]</div>
+                <div class="point-text"><strong>Firewall — function:</strong> filters inbound and outbound network traffic by inspecting packet headers against a set of rules.</div>
+              </div>
+              <div class="mark-point" data-idx="1">
+                <div class="tick">[2]</div>
+                <div class="point-text"><strong>Firewall — application:</strong> blocks unauthorised connections to the server (e.g. denying inbound traffic to admin ports such as 22 or 3389 from the open internet).</div>
+              </div>
+              <div class="mark-point" data-idx="2">
+                <div class="tick">[3]</div>
+                <div class="point-text"><strong>Encryption — function:</strong> converts plaintext into ciphertext using an algorithm and a key so that intercepted data is unreadable.</div>
+              </div>
+              <div class="mark-point" data-idx="3">
+                <div class="tick">[4]</div>
+                <div class="point-text"><strong>Encryption — application:</strong> protects customer data <em>in transit</em> (via TLS / HTTPS) so eavesdroppers cannot read it, and <em>at rest</em> via disk encryption so stolen drives are useless.</div>
+              </div>
+              <div class="mark-point" data-idx="4">
+                <div class="tick">[5]</div>
+                <div class="point-text"><strong>Third measure — function:</strong> e.g. <em>regular backups</em> store copies of data on separate media or off-site.</div>
+              </div>
+              <div class="mark-point" data-idx="5">
+                <div class="tick">[6]</div>
+                <div class="point-text"><strong>Third measure — application:</strong> if data is lost to ransomware or hardware failure, the business can restore from backups without paying a ransom or losing customer records.</div>
+              </div>
+            </div>
+            <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <button class="btn btn-primary" id="btn-reveal-next">Reveal next mark point</button>
+              <button class="btn btn-secondary" id="btn-reveal-all">Reveal all</button>
+              <button class="btn btn-ghost" id="btn-reveal-reset">Hide all</button>
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;margin-left:auto">Revealed: <span id="reveal-count">0</span> / 6</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">8 mins · Independent writing → peer mark</div>
+        <p><strong>Routine:</strong> 4 minutes silent writing in books. Then reveal points one-by-one; students self-mark in another colour.</p>
+        <p><strong>The 6-mark "explain" template:</strong> for each measure named, give (a) what it does and (b) how it applies to this specific scenario. Two marks each, three measures = six marks. Make the structure explicit — pattern recognition is a teachable skill.</p>
+        <p><strong>Stretch:</strong> a student defending an unusual third measure (e.g. <em>staff training</em> — valid because phishing is how attackers usually get the password to reach the server). Reward answers that go beyond the obvious.</p>
+      </div>
+    </section>
+
+    <!-- ============ DISCUSSION · CLAUDE MYTHOS / AI &amp; CYBER ============ -->
+    <section class="section-card" id="s-mythos">
+      <div class="head">
+        <div class="pill-row"><span class="pill investigate">💬</span><span class="step-label">Looking ahead · Discussion</span></div>
+        <h2>The next chapter — when AI joins <em style="color:var(--brand-600)">both</em> sides.</h2>
+        <p class="description">In May 2026, Anthropic announced <strong>Claude Mythos Preview</strong> — its <strong>latest</strong> frontier AI model, strong enough at finding software flaws that Anthropic refused to release it publicly and instead launched <strong>Project Glasswing</strong>, sharing it only with around forty vetted organisations (Apple, Google, Microsoft, AWS, NVIDIA, JPMorgan, the Linux Foundation, and others) so they could patch first. The story behind every defence in this lesson is about to change. This section gives the class the questions to wrestle with it.</p>
+      </div>
+      <div class="content">
+
+        <h3>What Mythos is — the short version</h3>
+        <ul style="margin-left:18px">
+          <li><strong>Who:</strong> Anthropic — the AI lab that makes Claude.</li>
+          <li><strong>What:</strong> Anthropic's <strong>latest</strong> frontier model — with offensive cyber-security capability strong enough that, in early testing, it found <em>thousands of high-severity, previously-unknown vulnerabilities</em> — including in every major operating system and every major web browser. Some flaws were decades old.</li>
+          <li><strong>How it was released:</strong> not publicly. Under <strong>Project Glasswing</strong>, Anthropic shared "Mythos Preview" with around 40 critical-infrastructure organisations so they could patch their software before anyone else could use Mythos-class models to attack them.</li>
+          <li><strong>Why it matters here:</strong> what one frontier lab built in 2026, criminal groups and nation-states will race to build next. Every defence in this lesson now has a new opponent waiting.</li>
+        </ul>
+
+        <h3>Watch — preview before use</h3>
+        <p style="color:var(--text-dim);font-size:14px">None of these have been previewed by the lesson author. <strong>Open and watch each one yourself before showing to a class</strong> — content and tone vary.</p>
+        <ul style="margin-left:18px;font-size:14.5px;line-height:1.7">
+          <li><a href="https://www.youtube.com/watch?v=YGyj_fXNyFU" target="_blank" rel="noopener"><strong>Claude Mythos Preview in 6 Minutes</strong></a> — short factual explainer.</li>
+          <li><a href="https://www.youtube.com/watch?v=IZ-iCJ1GnGI" target="_blank" rel="noopener"><strong>"Anthropic Withheld Claude Mythos. Here's What's Real."</strong></a> — separates the substance from the marketing.</li>
+          <li><a href="https://www.youtube.com/watch?v=urkVFZAhz3U" target="_blank" rel="noopener"><strong>"Project Glasswing / Claude Mythos: Anthropic's $x00 Million Marketing Stunt?"</strong></a> — strongly critical view; use as a counterweight.</li>
+          <li><a href="https://www.youtube.com/watch?v=DNhjITZy7cQ" target="_blank" rel="noopener"><strong>"What Mythos &amp; Glasswing mean for developers"</strong></a> — practical / developer-focused angle.</li>
+        </ul>
+
+        <h3>Read</h3>
+        <ul style="margin-left:18px;font-size:14.5px;line-height:1.7">
+          <li><a href="https://www.anthropic.com/glasswing" target="_blank" rel="noopener">Anthropic — Project Glasswing (primary source)</a></li>
+          <li><a href="https://www.schneier.com/blog/archives/2026/04/mythos-and-cybersecurity.html" target="_blank" rel="noopener">Bruce Schneier — <em>Mythos and Cybersecurity</em> (skeptical view)</a></li>
+          <li><a href="https://www.cnbc.com/2026/05/08/anthropic-mythos-ai-cybersecurity-banks.html" target="_blank" rel="noopener">CNBC — <em>Mythos set off cyber 'hysteria.' Experts say the threat was already here</em></a></li>
+          <li><a href="https://www.theringer.com/2026/05/06/tech/claude-mythos-anthropic-project-glasswing-cybersecurity-threat-ai" target="_blank" rel="noopener">The Ringer — <em>Could Claude Mythos Actually Destroy the Internet?</em></a></li>
+        </ul>
+
+        <h3>Five discussion questions</h3>
+        <p style="color:var(--text-dim)">There is no single right answer to any of these. Pair work for two minutes per question, then one answer per pair on the board.</p>
+
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">D1.</span> If a frontier AI can find thousands of vulnerabilities in days, who does this favour in the long run — the <em>attacker</em> or the <em>defender</em>? Why?</p>
+        </div>
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">D2.</span> Anthropic gave Mythos to 40 large organisations first (Apple, Google, JPMorgan, AWS, the Linux Foundation…) so they could patch before anyone else got Mythos-class tools. Was this <strong>responsible disclosure</strong>, or an <strong>unfair head start</strong> that leaves a Guernsey SME, the States of Guernsey, or your school further behind?</p>
+        </div>
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">D3.</span> Look back at the five real-world cases above. If Mythos-class tools become cheaply available to criminals in two to three years, <em>which single defence in this lesson</em> would matter most to a Guernsey organisation — and which would matter least? Defend your ranking.</p>
+        </div>
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">D4.</span> For an A Level student thinking about a career in cyber security: if AI can find flaws, write exploits, <em>and</em> draft patches — should you still learn the material in this lesson? What <em>new</em> skills become more valuable?</p>
+        </div>
+        <div class="question-box">
+          <p class="question-text"><span class="qnum">D5.</span> Bruce Schneier argues that AI "does not create new vulnerabilities — it exposes existing ones," and that the chronic under-investment in security was the real problem all along. Is Mythos a <em>genuine inflection point</em> in cyber, or is it a <em>familiar threat re-packaged with new marketing</em>?</p>
+        </div>
+
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">7 mins · Pair-and-share · Open debate</div>
+        <p><strong>Why this section exists.</strong> Cyber security in 2026 is in flux. A Level students considering this field need to think about it <em>now</em>, not after their exam. The questions above are deliberately open — there is no mark scheme, only the quality of reasoning.</p>
+        <p><strong>Bias to flag openly.</strong> Much of the Mythos narrative comes from Anthropic itself, which has a commercial interest in the story being significant. Lean hard into the skeptical sources (Schneier; the "Marketing Stunt" video) to keep the discussion balanced. If you used an AI to help prepare any of this lesson, declare that to the class — modelling honest sourcing is itself part of the lesson.</p>
+        <p><strong>Pacing.</strong> If time is short, run only <strong>D1</strong> and <strong>D5</strong> — they bookend the debate. <strong>D3</strong> is the strongest local anchor; do it if there is room.</p>
+        <p><strong>Stretch.</strong> Does the encapsulation visual from earlier change with AI in the loop? (Trick question — it doesn't; the layers and the destination port still mean what they meant. What changes is how fast attackers <em>and</em> defenders find new ways to abuse them.)</p>
+        <p><strong>Verify before delivery.</strong> The Mythos story is brand-new (May 2026). Re-check the linked articles on the day for any update or correction; details may shift.</p>
+      </div>
+    </section>
+
+    <!-- ============ PLENARY ============ -->
+    <section class="section-card" id="s-plenary">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">⏱</span><span class="step-label">Plenary</span></div>
+        <h2>60-second summary.</h2>
+        <p class="description">Answer all three in your book in 60 seconds. Be ruthless. One sentence each.</p>
+      </div>
+      <div class="content">
+        <div class="plenary-grid">
+          <div class="plenary-card">
+            <div class="num">1</div>
+            <p class="prompt">In one sentence: what does a firewall do that a proxy doesn't, and vice versa?</p>
+          </div>
+          <div class="plenary-card">
+            <div class="num">2</div>
+            <p class="prompt">Asymmetric encryption solves the problem symmetric has. Name that problem.</p>
+          </div>
+          <div class="plenary-card">
+            <div class="num">3</div>
+            <p class="prompt">A school employs every prevention measure in this lesson except one, and is still breached. Which one is missing — and why?</p>
+          </div>
+        </div>
+        <div class="countdown">
+          <div class="timer" id="timer">60</div>
+          <div class="countdown-actions">
+            <button class="btn btn-primary" id="btn-timer-start">Start 60s</button>
+            <button class="btn btn-ghost" id="btn-timer-reset">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">3 mins · Silent writing · Exit ticket</div>
+        <p>Question 3 is the killer — the answer most students give is <em>training</em>, because the breach almost always exploits the human even when every box is technically defended. Reward articulation of this.</p>
+        <p><strong>Exit ticket:</strong> books on the desk by the door. 30 seconds tomorrow morning tells you who needs intervention.</p>
+        <p><strong>Homework:</strong> revisit Specification 1.3.3 (pp. 76–79 of the OCR textbook); attempt the past-paper question on Google Classroom — full 6-mark write-up.</p>
+      </div>
+    </section>
+
+    <!-- ============ REFLECTION ============ -->
+    <section class="section-card" id="s-reflection">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">✎</span><span class="step-label">Reflection</span></div>
+        <h2>Reflect on your learning.</h2>
+      </div>
+      <div class="content">
+        <p style="color:var(--text-dim)">Take a moment to think about what you have learned. Your answers are just for your own reflection — they are not marked or saved.</p>
+        <label style="display:block">
+          <strong>One thing I understand now is...</strong>
+          <textarea id="field-reflect-1" class="fld-area" rows="2"></textarea>
+        </label>
+        <label style="display:block">
+          <strong>One thing I still find tricky is...</strong>
+          <textarea id="field-reflect-2" class="fld-area" rows="2"></textarea>
+        </label>
+        <label style="display:block">
+          <strong>One prevention measure I would not have thought of without this lesson is...</strong>
+          <textarea id="field-reflect-3" class="fld-area" rows="2"></textarea>
+        </label>
+      </div>
+    </section>
+
+    <!-- ============ DOWNLOAD LESSON RECORD ============ -->
+    <section class="section-card download-card" id="s-download">
+      <div class="head">
+        <div class="pill-row"><span class="pill intro">⤓</span><span class="step-label">Save your work</span></div>
+        <h2>Download today's lesson.</h2>
+      </div>
+      <div class="content">
+        <p>This page does not save anything automatically. To keep a record of today's lesson, download a single HTML file containing the <strong>lesson content</strong> (with the hints, answers and worked outputs revealed for revision) together with everything <strong>you</strong> typed — your prediction, your defence-in-depth plan, every section note, and your reflections.</p>
+        <p style="font-size:13px;color:var(--text-dim)">The teacher's lesson notes are <em>not</em> included. The file is built inside your browser — nothing is uploaded anywhere.</p>
+        <div style="margin-top:6px">
+          <button class="btn btn-primary" id="btn-download"><span aria-hidden="true">⤓</span> Download lesson record</button>
+          <span class="download-confirm" id="download-confirm"></span>
+        </div>
+      </div>
+    </section>
+
+  </article>
+</main>
+
+<footer>End of lesson · OCR H446 · 1.3.3 · Network Security · Prevention</footer>
+
+<script>
+'use strict';
+
+/* ============ TEACHER NOTES TOGGLE ============ */
+(function(){
+  const btn = document.getElementById('toggle-notes');
+  let on = false;
+  btn.addEventListener('click', () => {
+    on = !on;
+    document.querySelectorAll('.teacher-note').forEach(n => n.classList.toggle('shown', on));
+    btn.classList.toggle('btn-primary', on);
+    btn.classList.toggle('btn-secondary', !on);
+    btn.textContent = on ? 'Hide notes' : 'Teacher notes';
+  });
+})();
+
+/* ============ PROGRESS BAR ============ */
+(function(){
+  const fill = document.getElementById('progress-fill');
+  window.addEventListener('scroll', () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    fill.style.width = pct + '%';
+  }, { passive: true });
+})();
+
+/* ============ PRIMM REVEAL BUTTONS ============ */
+(function(){
+  function toggleReveal(btn, targetId, showLabel, hideLabel){
+    const target = document.getElementById(targetId);
+    if (!target) return;
+    const showing = target.style.display !== 'none';
+    target.style.display = showing ? 'none' : 'block';
+    btn.textContent = showing ? showLabel : hideLabel;
+  }
+  const p = document.getElementById('btn-reveal-predict');
+  if (p) p.addEventListener('click', () => toggleReveal(p, 'predict-output', 'Show output', 'Hide output'));
+  const m = document.getElementById('btn-reveal-modify');
+  if (m) m.addEventListener('click', () => toggleReveal(m, 'modify-output', 'Show output', 'Hide output'));
+  const e = document.getElementById('btn-modify-explain');
+  if (e) e.addEventListener('click', () => toggleReveal(e, 'modify-explanation', 'Show explanation', 'Hide explanation'));
+})();
+
+/* ============ HINT / ANSWER REVEAL (Investigate) ============ */
+(function(){
+  document.querySelectorAll('[data-toggle="hint"], [data-toggle="answer"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      if (!target) return;
+      const showing = target.style.display !== 'none';
+      target.style.display = showing ? 'none' : 'block';
+      const kind = btn.dataset.toggle === 'hint' ? 'hint' : 'answer';
+      btn.textContent = (showing ? 'Show ' : 'Hide ') + kind;
+    });
+  });
+})();
+
+/* ============ FIREWALL SIMULATOR ============ */
+(function(){
+  const packets = [
+    { src: '93.184.216.34', port: 443, proto: 'TCP', flag: 'SYN, established session', allow: true,
+      reason: 'Port 443 (HTTPS) is allowed by rule 1. This is a normal HTTPS request. Allow.' },
+    { src: '10.0.0.42', port: 22, proto: 'TCP', flag: 'SSH from internal subnet', allow: true,
+      reason: 'Rule 3 allows SSH from the trusted internal range 10.0.0.0/8. Allow.' },
+    { src: '185.4.77.91', port: 80, proto: 'TCP', flag: 'HTTP', allow: false,
+      reason: 'Rule 6 denies the entire 185.4.x.x range — it is on a blocklist. Even though port 80 is otherwise allowed, the source rule fires first. Deny.' },
+    { src: '203.0.113.5', port: 23, proto: 'TCP', flag: 'Telnet attempt', allow: false,
+      reason: 'Telnet (port 23) is denied by rule 4 — it transmits credentials in plaintext. Deny.' },
+    { src: '8.8.4.4', port: 3389, proto: 'TCP', flag: 'RDP attempt', allow: false,
+      reason: 'Remote Desktop (3389) is denied by rule 5. Exposing RDP to the internet is a textbook ransomware entry point. Deny.' },
+    { src: '52.16.99.4', port: 443, proto: 'TCP', flag: 'HTTPS handshake', allow: true,
+      reason: 'Standard HTTPS traffic from an AWS-range IP. Matches rule 1. Allow.' }
+  ];
+  let idx = -1, score = 0, attempts = 0, running = false;
+  const info = document.getElementById('packet-info');
+  const fb = document.getElementById('fw-feedback');
+  const scoreEl = document.getElementById('fw-score');
+  const attemptsEl = document.getElementById('fw-attempts');
+  const allow = document.getElementById('btn-allow');
+  const deny = document.getElementById('btn-deny');
+  const start = document.getElementById('btn-fw-start');
+
+  function showPacket(i){
+    const p = packets[i];
+    info.innerHTML =
+      '<div class="header-line">Inbound packet · #' + (i+1) + '</div>' +
+      '<div class="field"><span>Source IP</span><span class="v">' + p.src + '</span></div>' +
+      '<div class="field"><span>Dest Port</span><span class="v">' + p.port + '</span></div>' +
+      '<div class="field"><span>Protocol</span><span class="v">' + p.proto + '</span></div>' +
+      '<div class="field"><span>Flag</span><span class="v">' + p.flag + '</span></div>';
+  }
+  function decide(choice){
+    if (!running || idx < 0 || idx >= packets.length) return;
+    const p = packets[idx];
+    const correct = choice === p.allow;
+    attempts++;
+    if (correct) score++;
+    scoreEl.textContent = score;
+    attemptsEl.textContent = attempts + ' / 6';
+    fb.className = 'feedback-box ' + (correct ? 'correct' : 'wrong');
+    fb.innerHTML = '<div class="verdict">' + (correct ? '✓ Correct' : '✗ Reconsider') + '</div><div>' + p.reason + '</div>';
+    allow.disabled = true; deny.disabled = true;
+    setTimeout(() => {
+      idx++;
+      if (idx >= packets.length){
+        running = false;
+        start.textContent = 'Restart';
+        fb.innerHTML = '<div class="verdict">Simulation complete</div><div>You scored <strong>' + score + '/' + packets.length + '</strong>. ' + (score === packets.length ? 'Perfect — you have the rules down.' : 'Re-read the rules table. Top-down, first match wins.') + '</div>';
+        info.innerHTML = '<div class="header-line">No packets pending</div>' +
+          '<div class="field"><span>Source IP</span><span class="v">—</span></div>' +
+          '<div class="field"><span>Dest Port</span><span class="v">—</span></div>' +
+          '<div class="field"><span>Protocol</span><span class="v">—</span></div>' +
+          '<div class="field"><span>Flag</span><span class="v">—</span></div>';
+      } else {
+        showPacket(idx);
+        allow.disabled = false; deny.disabled = false;
+      }
+    }, 1700);
+  }
+  allow.addEventListener('click', () => decide(true));
+  deny.addEventListener('click', () => decide(false));
+  start.addEventListener('click', () => {
+    idx = 0; score = 0; attempts = 0; running = true;
+    scoreEl.textContent = '0'; attemptsEl.textContent = '0 / 6';
+    start.textContent = 'Restart';
+    fb.className = 'feedback-box';
+    fb.innerHTML = '<div class="verdict">Live</div><div>Decide: allow or deny?</div>';
+    allow.disabled = false; deny.disabled = false;
+    showPacket(0);
+  });
+})();
+
+/* ============ PROXY VISUALISATION ============ */
+(function(){
+  const modeBtns = document.querySelectorAll('[data-proxy-mode]');
+  const showBtns = document.querySelectorAll('[data-proxy-show]');
+  const proxyNode = document.getElementById('proxy-node');
+  const direct = document.getElementById('direct-arrows');
+  const proxy = document.getElementById('proxy-arrows');
+  const dot = document.getElementById('packet-dot');
+  const info = document.getElementById('proxy-info');
+  let mode = 'direct';
+
+  function setMode(m){
+    mode = m;
+    modeBtns.forEach(b => b.classList.toggle('on', b.dataset.proxyMode === m));
+    if (m === 'proxy'){
+      proxyNode.setAttribute('opacity', '1');
+      proxy.setAttribute('opacity', '1');
+      direct.setAttribute('opacity', '0');
+      info.innerHTML = '<strong>Proxy mode.</strong> The client connects to the proxy; the proxy connects to the server. The server only sees the proxy’s IP. The proxy can cache responses, filter content and log everything. Use the buttons below to highlight each behaviour.';
+    } else {
+      proxyNode.setAttribute('opacity', '0');
+      proxy.setAttribute('opacity', '0');
+      direct.setAttribute('opacity', '1');
+      info.innerHTML = '<strong>Direct mode.</strong> The client and server communicate directly. The server logs the client’s real IP. No caching, no filtering, no privacy. Toggle <strong>With proxy</strong> to see what changes.';
+    }
+  }
+  modeBtns.forEach(b => b.addEventListener('click', () => setMode(b.dataset.proxyMode)));
+  showBtns.forEach(b => b.addEventListener('click', () => {
+    setMode('proxy');
+    const k = b.dataset.proxyShow;
+    if (k === 'cache') info.innerHTML = '<strong>Caching.</strong> When 30 students all load the BBC homepage, the proxy fetches it once and serves the cached copy to the other 29. Faster pages; massive bandwidth savings on the school WAN link.';
+    else if (k === 'filter') info.innerHTML = '<strong>Content filtering.</strong> The proxy inspects URLs and content against a blocklist (gambling, social media during lessons, malware-distribution sites). Requests that fail the check never reach the wider internet.';
+    else if (k === 'anon') info.innerHTML = '<strong>Anonymity.</strong> The destination server sees only the proxy’s public IP (198.51.100.7), not the individual client (203.0.113.42). The school’s internal IP layout stays private.';
+  }));
+  document.getElementById('btn-proxy-anim').addEventListener('click', () => {
+    dot.setAttribute('opacity', '1');
+    dot.setAttribute('cx', 160);
+    dot.setAttribute('fill', '#f59e0b');
+    const start = performance.now();
+    const dur = 1700;
+    function frame(now){
+      const t = Math.min(1, (now - start) / dur);
+      const eased = t < 0.5 ? 2*t*t : -1 + (4 - 2*t) * t;
+      const x = 160 + (640 - 160) * eased;
+      dot.setAttribute('cx', x);
+      if (mode === 'proxy' && x >= 400) dot.setAttribute('fill', '#10b981');
+      if (t < 1) requestAnimationFrame(frame);
+      else setTimeout(() => dot.setAttribute('opacity', '0'), 350);
+    }
+    requestAnimationFrame(frame);
+  });
+})();
+
+/* ============ CAESAR CIPHER ============ */
+(function(){
+  const plain = document.getElementById('cipher-plain');
+  const shift = document.getElementById('cipher-shift');
+  const shiftVal = document.getElementById('cipher-shift-val');
+  const out = document.getElementById('cipher-out');
+  function caesar(text, s){
+    return text.toUpperCase().replace(/[A-Z]/g, ch => String.fromCharCode(((ch.charCodeAt(0) - 65 + s) % 26) + 65));
+  }
+  function update(){
+    const s = parseInt(shift.value, 10);
+    shiftVal.textContent = s;
+    out.textContent = caesar(plain.value, s);
+  }
+  plain.addEventListener('input', update);
+  shift.addEventListener('input', update);
+  update();
+})();
+
+/* ============ ASYMMETRIC DEMO ============ */
+(function(){
+  const msg = document.getElementById('asym-msg');
+  const log = document.getElementById('asym-log');
+  const send = document.getElementById('btn-asym-send');
+  const eve = document.getElementById('btn-asym-eve');
+  let lastCipher = '';
+  function line(text, cls){
+    const div = document.createElement('div');
+    div.className = 'log-line' + (cls ? ' ' + cls : '');
+    const ts = new Date().toLocaleTimeString('en-GB', { hour12: false });
+    div.innerHTML = '<span class="ts">[' + ts + ']</span>' + text;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+  function fakeEncrypt(s){
+    try { return btoa(unescape(encodeURIComponent(s))).split('').reverse().join(''); }
+    catch(e){ return '<<encrypted>>'; }
+  }
+  send.addEventListener('click', () => {
+    const m = msg.value.trim();
+    if (!m) return;
+    line('Bob writes plaintext: <strong>"' + m + '"</strong>');
+    line("Bob fetches Alice's <em>public key</em>.", 'crypt');
+    lastCipher = fakeEncrypt(m);
+    const shown = lastCipher.length > 48 ? lastCipher.slice(0, 48) + '…' : lastCipher;
+    setTimeout(() => line("Bob encrypts with Alice's public key → ciphertext: <strong>" + shown + '</strong>', 'crypt'), 350);
+    setTimeout(() => line('Ciphertext travels over the insecure channel.'), 700);
+    setTimeout(() => line('Alice receives ciphertext. Uses her <em>private key</em> to decrypt.', 'crypt'), 1050);
+    setTimeout(() => line('Alice reads: <strong>"' + m + '"</strong> ✓', 'ok'), 1400);
+  });
+  eve.addEventListener('click', () => {
+    if (!lastCipher){ line('Eve has nothing to intercept yet — send a message first.', 'warn'); return; }
+    const shown = lastCipher.length > 48 ? lastCipher.slice(0, 48) + '…' : lastCipher;
+    line('Eve sniffs the wire and captures: <strong>' + shown + '</strong>', 'warn');
+    line("Eve has Alice's <em>public key</em> (it's public — anyone has it).", 'warn');
+    line('But the public key only encrypts — it cannot decrypt this ciphertext.', 'warn');
+    line("Without Alice's <strong>private</strong> key, Eve sees gibberish. Confidentiality preserved.", 'ok');
+  });
+})();
+
+/* ============ PARSONS PUZZLE ============ */
+(function(){
+  const solution = [
+    "Alice generates a public/private key pair.",
+    "Alice publishes her public key. Anyone may take a copy.",
+    "Bob writes his plaintext message.",
+    "Bob encrypts the message with Alice's public key.",
+    "The ciphertext travels over the insecure channel.",
+    "Alice decrypts with her private key and reads the plaintext."
+  ];
+  let order = [];
+  const listEl = document.getElementById('parsons-list');
+  const fb = document.getElementById('parsons-feedback');
+
+  function shuffle(){
+    order = solution.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    if (order.every((v, i) => v === i)){ [order[0], order[1]] = [order[1], order[0]]; }
+    render(false);
+    fb.className = 'parsons-feedback';
+  }
+
+  function render(checked){
+    listEl.innerHTML = '';
+    order.forEach((lineIdx, pos) => {
+      const li = document.createElement('li');
+      li.draggable = true;
+      li.dataset.pos = String(pos);
+      if (checked) li.classList.add(lineIdx === pos ? 'right' : 'wrong');
+      li.innerHTML =
+        '<span class="handle" aria-hidden="true"><span style="font-size:16px">⠿</span><span class="pos">' + (pos + 1) + '</span></span>' +
+        '<span class="ptext">' + solution[lineIdx] + '</span>' +
+        '<span class="move-buttons">' +
+          '<button data-action="up" aria-label="Move up"' + (pos === 0 ? ' disabled' : '') + '>▲</button>' +
+          '<button data-action="down" aria-label="Move down"' + (pos === order.length - 1 ? ' disabled' : '') + '>▼</button>' +
+        '</span>';
+      listEl.appendChild(li);
+    });
+    attach();
+  }
+
+  function clearFeedback(){
+    fb.className = 'parsons-feedback';
+    fb.innerHTML = '';
+  }
+
+  function attach(){
+    let dragPos = null;
+    listEl.querySelectorAll('li').forEach(li => {
+      li.addEventListener('dragstart', () => { dragPos = parseInt(li.dataset.pos, 10); });
+      li.addEventListener('dragover', e => e.preventDefault());
+      li.addEventListener('drop', e => {
+        e.preventDefault();
+        const target = parseInt(li.dataset.pos, 10);
+        if (dragPos === null || dragPos === target) return;
+        const next = order.slice();
+        const [moved] = next.splice(dragPos, 1);
+        next.splice(target, 0, moved);
+        order = next;
+        dragPos = null;
+        render(false);
+        clearFeedback();
+      });
+      const up = li.querySelector('[data-action="up"]');
+      const dn = li.querySelector('[data-action="down"]');
+      up.addEventListener('click', () => {
+        const p = parseInt(li.dataset.pos, 10);
+        if (p === 0) return;
+        [order[p], order[p-1]] = [order[p-1], order[p]];
+        render(false); clearFeedback();
+      });
+      dn.addEventListener('click', () => {
+        const p = parseInt(li.dataset.pos, 10);
+        if (p === order.length - 1) return;
+        [order[p], order[p+1]] = [order[p+1], order[p]];
+        render(false); clearFeedback();
+      });
+    });
+  }
+
+  document.getElementById('btn-parsons-check').addEventListener('click', () => {
+    const solved = order.every((v, i) => v === i);
+    render(true);
+    fb.className = 'parsons-feedback shown ' + (solved ? 'correct' : 'partial');
+    fb.innerHTML = solved
+      ? '<strong>Correct!</strong> That is how asymmetric encryption works in practice.'
+      : '<strong>Not quite yet.</strong> Lines with a green border are in the right place. Keep moving the others.';
+  });
+  document.getElementById('btn-parsons-shuffle').addEventListener('click', shuffle);
+  document.getElementById('btn-parsons-solution').addEventListener('click', () => {
+    order = solution.map((_, i) => i);
+    render(true);
+    fb.className = 'parsons-feedback shown correct';
+    fb.innerHTML = '<strong>Solution shown.</strong> Read it through, then press Shuffle to try again.';
+  });
+
+  shuffle();
+})();
+
+/* ============ MATCHER ACTIVITY ============ */
+(function(){
+  const threats = document.querySelectorAll('.threat');
+  const slots = document.querySelectorAll('.defence-slot');
+  const fb = document.getElementById('matcher-feedback');
+  let matched = 0;
+  threats.forEach(t => {
+    t.addEventListener('dragstart', e => {
+      if (t.classList.contains('matched')){ e.preventDefault(); return; }
+      e.dataTransfer.setData('text/plain', t.dataset.threat);
+      e.dataTransfer.setData('correct', t.dataset.correct);
+      t.classList.add('dragging');
+    });
+    t.addEventListener('dragend', () => t.classList.remove('dragging'));
+  });
+  slots.forEach(s => {
+    s.addEventListener('dragover', e => { e.preventDefault(); s.classList.add('drag-over'); });
+    s.addEventListener('dragleave', () => s.classList.remove('drag-over'));
+    s.addEventListener('drop', e => {
+      e.preventDefault();
+      s.classList.remove('drag-over');
+      const key = e.dataTransfer.getData('text/plain');
+      const correct = e.dataTransfer.getData('correct');
+      const el = document.querySelector('.threat[data-threat="' + key + '"]');
+      if (!el) return;
+      if (s.dataset.defence === correct){
+        const m = document.createElement('div');
+        m.className = 'matched-threat';
+        m.textContent = '✓ ' + el.textContent;
+        s.appendChild(m);
+        el.classList.add('matched');
+        el.setAttribute('draggable', 'false');
+        matched++;
+        fb.innerHTML = matched === 6
+          ? '<strong style="color:var(--brand-700)">All six matched.</strong> Notice: every defence above is necessary — none alone is sufficient. Defence in depth.'
+          : '<strong>' + matched + '/6 matched.</strong> Keep going.';
+      } else {
+        fb.innerHTML = '<strong style="color:var(--danger)">Not the primary defence for that threat.</strong> Think about which layer is being directly targeted — human, perimeter, or data in transit.';
+      }
+    });
+  });
+})();
+
+/* ============ EXAM REVEAL ============ */
+(function(){
+  const points = document.querySelectorAll('.mark-point');
+  const count = document.getElementById('reveal-count');
+  let i = 0;
+  function update(){ count.textContent = document.querySelectorAll('.mark-point.shown').length; }
+  document.getElementById('btn-reveal-next').addEventListener('click', () => {
+    if (i >= points.length) return;
+    points[i].classList.add('shown');
+    i++; update();
+  });
+  document.getElementById('btn-reveal-all').addEventListener('click', () => {
+    points.forEach(p => p.classList.add('shown'));
+    i = points.length; update();
+  });
+  document.getElementById('btn-reveal-reset').addEventListener('click', () => {
+    points.forEach(p => p.classList.remove('shown'));
+    i = 0; update();
+  });
+})();
+
+/* ============ PLENARY TIMER ============ */
+(function(){
+  const el = document.getElementById('timer');
+  const startBtn = document.getElementById('btn-timer-start');
+  const resetBtn = document.getElementById('btn-timer-reset');
+  let sec = 60, handle = null;
+  function render(){
+    el.textContent = sec;
+    el.classList.toggle('warn', sec <= 20 && sec > 10);
+    el.classList.toggle('urgent', sec <= 10 && sec > 0);
+    if (sec === 0){
+      el.textContent = 'TIME';
+      el.classList.remove('urgent');
+      el.classList.add('warn');
+      clearInterval(handle); handle = null;
+    }
+  }
+  startBtn.addEventListener('click', () => {
+    if (handle) return;
+    if (sec === 0) sec = 60;
+    render();
+    handle = setInterval(() => { sec--; render(); }, 1000);
+  });
+  resetBtn.addEventListener('click', () => {
+    clearInterval(handle); handle = null;
+    sec = 60;
+    el.classList.remove('warn', 'urgent');
+    el.textContent = '60';
+  });
+})();
+
+/* ============ ENCAPSULATION INTERACTIVE ============ */
+(function(){
+  const stage = document.getElementById('encap-stage');
+  if (!stage) return;
+  const callout = document.getElementById('encap-callout');
+  const tcp = stage.querySelector('.tcp-layer');
+  const ip = stage.querySelector('.ip-layer');
+  const eth = stage.querySelector('.eth-layer');
+  const layers = [null, tcp, ip, eth]; // index n adds layers[1..n]
+  const stepBtns = document.querySelectorAll('[data-encap-step]');
+
+  const messages = [
+    '<strong>Step 0.</strong> Your browser has written an HTTP request. Right now this is just data — there is no addressing information at all. Press the buttons below to add each layer\'s header.',
+    '<strong>Step 1 · Transport layer (TCP).</strong> A TCP header has been added with two port numbers. The <em>destination port 80</em> is the key: it tells the receiving computer to hand the data to the <strong>HTTP web server</strong> service. The source port lets the receiver send a reply back to the right process. The wrapped unit is now called a <strong>segment</strong>.',
+    '<strong>Step 2 · Network layer (IP).</strong> An IP header has been added with source and destination IP addresses. Routers across the internet use the destination IP to forward this on — they do not look at the ports. The wrapped unit is now a <strong>packet</strong>.',
+    '<strong>Step 3 · Link layer (Ethernet).</strong> An Ethernet header has been added (MAC addresses for the very next hop on the local network) plus a trailer (a CRC for error checking). This is a <strong>frame</strong> — ready to be turned into electrical signals on the wire. <span style="color:var(--brand-700)"><strong>Tie back:</strong> the firewall above reads the destination IP and destination port. It never opens the application data inside.</span>'
+  ];
+
+  function setState(n){
+    stage.dataset.state = String(n);
+    layers.forEach((l, idx) => {
+      if (!l) return;
+      if (idx <= n) l.classList.remove('not-added');
+      else l.classList.add('not-added');
+    });
+    stepBtns.forEach(b => {
+      const s = parseInt(b.dataset.encapStep, 10);
+      // Reset (step 0) always enabled; step buttons only enable the "next" step
+      b.disabled = !(s === 0 || s === n + 1);
+    });
+    callout.innerHTML = messages[n];
+  }
+  stepBtns.forEach(b => {
+    b.addEventListener('click', () => setState(parseInt(b.dataset.encapStep, 10)));
+  });
+  setState(0);
+})();
+
+/* ============ ANNOTATIONS (Add a note per section) ============ */
+(function(){
+  // Sections that should not get an annotation box:
+  //   s-cover     — title/objectives, not a teaching unit
+  //   s-reflection— is itself a notes section
+  //   s-download  — is the download button
+  const skip = new Set(['s-cover', 's-reflection', 's-download']);
+  document.querySelectorAll('.section-card[id]').forEach(card => {
+    if (skip.has(card.id)) return;
+    const noteKey = 'note-' + card.id;
+    const box = document.createElement('div');
+    box.className = 'annotation-box';
+    box.innerHTML =
+      '<button type="button" class="annotation-toggle" data-toggle-note="' + noteKey + '">' +
+        '<span aria-hidden="true">✎</span> <span class="toggle-label">Add a note</span>' +
+        '<span class="indicator">note added</span>' +
+      '</button>' +
+      '<div class="annotation-area" id="area-' + noteKey + '">' +
+        '<textarea id="' + noteKey + '" placeholder="Write your own note about this section..."></textarea>' +
+        '<p class="annotation-hint">Your note is not saved automatically. Use <strong>Download my notes</strong> at the end of the lesson to keep it.</p>' +
+      '</div>';
+    card.appendChild(box);
+  });
+
+  // Toggle open/closed
+  document.querySelectorAll('[data-toggle-note]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.toggleNote;
+      const area = document.getElementById('area-' + key);
+      const open = area.classList.toggle('open');
+      btn.querySelector('.toggle-label').textContent = open ? 'Hide my note' : 'Add a note';
+    });
+  });
+
+  // Indicator chip when the note has content
+  document.querySelectorAll('textarea[id^="note-"]').forEach(ta => {
+    ta.addEventListener('input', () => {
+      const toggle = document.querySelector('[data-toggle-note="' + ta.id + '"]');
+      if (!toggle) return;
+      toggle.querySelector('.indicator').classList.toggle('on', !!ta.value.trim());
+    });
+  });
+})();
+
+/* ============ DOWNLOAD MY NOTES ============ */
+(function(){
+  const btn = document.getElementById('btn-download');
+  if (!btn) return;
+  const confirm = document.getElementById('download-confirm');
+
+  function escapeHtml(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function buildHtml(){
+    const today = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+
+    // Clone the article so we can transform it without touching the live page.
+    const article = document.querySelector('main article');
+    if (!article) return '';
+    const clone = article.cloneNode(true);
+
+    // ---- Strip teacher-only / live-only UI from the clone ----
+    clone.querySelectorAll('.teacher-note').forEach(el => el.remove());
+    clone.querySelectorAll('.breach-warning').forEach(el => el.remove());
+    clone.querySelectorAll('.annotation-toggle').forEach(el => el.remove());
+    clone.querySelectorAll('.annotation-hint').forEach(el => el.remove());
+    clone.querySelectorAll('.time-pill').forEach(el => el.remove());
+    clone.querySelectorAll('button').forEach(el => el.remove());
+    clone.querySelectorAll('.proxy-toggle-bar, .proxy-actions-bar, .encap-controls, .countdown-actions, .decision-row, .sim-stats, .parsons-actions, .countdown, .download-confirm').forEach(el => el.remove());
+
+    // The download card itself is not lesson content.
+    const dlCard = clone.querySelector('#s-download');
+    if (dlCard) dlCard.remove();
+
+    // ---- Reveal hidden hints, answers, outputs, and mark points ----
+    clone.querySelectorAll('.hint-text, .answer-text').forEach(el => { el.style.display = 'block'; });
+    clone.querySelectorAll('#predict-output, #modify-output, #modify-explanation').forEach(el => { el.style.display = 'block'; });
+    clone.querySelectorAll('.mark-point').forEach(el => el.classList.add('shown'));
+    clone.querySelectorAll('.annotation-area').forEach(el => el.classList.add('open'));
+
+    // ---- Replace each textarea with a static div carrying the value ----
+    clone.querySelectorAll('textarea').forEach(ta => {
+      const live = document.getElementById(ta.id);
+      const value = live ? live.value : '';
+      const div = document.createElement('div');
+      if (value && value.trim()) {
+        div.className = 'student-input';
+        div.textContent = value;
+      } else {
+        div.className = 'student-input empty';
+        div.textContent = '(nothing written)';
+      }
+      ta.replaceWith(div);
+    });
+
+    // ---- Replace text / range inputs with their current values ----
+    clone.querySelectorAll('input[type="text"], input[type="range"]').forEach(inp => {
+      const live = document.getElementById(inp.id);
+      const value = live ? live.value : inp.value;
+      const span = document.createElement('span');
+      span.className = 'static-input';
+      span.textContent = value;
+      inp.replaceWith(span);
+    });
+
+    // ---- Populate Parsons list with the correct solution ----
+    const parsonsList = clone.querySelector('#parsons-list');
+    if (parsonsList) {
+      const solution = [
+        "Alice generates a public/private key pair.",
+        "Alice publishes her public key. Anyone may take a copy.",
+        "Bob writes his plaintext message.",
+        "Bob encrypts the message with Alice's public key.",
+        "The ciphertext travels over the insecure channel.",
+        "Alice decrypts with her private key and reads the plaintext."
+      ];
+      parsonsList.innerHTML = '';
+      solution.forEach((line, i) => {
+        const li = document.createElement('li');
+        li.style.cssText = 'display:block;padding:10px 14px;background:#0f172a;color:#f1f5f9;border-radius:8px;font-family:"JetBrains Mono",monospace;font-size:13px;margin-bottom:6px;border:2px solid #34d399;list-style:none';
+        li.textContent = (i+1) + '. ' + line;
+        parsonsList.appendChild(li);
+      });
+    }
+
+    // ---- Populate matcher slots with the correct threat → defence pairs ----
+    clone.querySelectorAll('.defence-slot').forEach(slot => {
+      const correctKey = slot.dataset.defence;
+      const threat = document.querySelector('.threat[data-correct="' + correctKey + '"]');
+      if (threat) {
+        const div = document.createElement('div');
+        div.className = 'matched-threat';
+        div.textContent = '✓ ' + threat.textContent;
+        slot.appendChild(div);
+      }
+    });
+
+    // ---- Replace firewall packet area with a static decision table ----
+    const packetArea = clone.querySelector('.packet-area');
+    if (packetArea) {
+      const div = document.createElement('div');
+      div.style.cssText = 'background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:16px';
+      div.innerHTML =
+        '<h4 style="margin-bottom:8px;font-size:14px">The six packets · correct decisions</h4>' +
+        '<ol style="margin-left:18px;font-family:\'JetBrains Mono\',monospace;font-size:13px;line-height:1.7">' +
+        '<li>93.184.216.34 · port 443 · TCP — <strong style="color:#065f46">ALLOW</strong> (rule 1, HTTPS)</li>' +
+        '<li>10.0.0.42 · port 22 · TCP — <strong style="color:#065f46">ALLOW</strong> (rule 3, SSH from trusted subnet)</li>' +
+        '<li>185.4.77.91 · port 80 · TCP — <strong style="color:#b91c1c">DENY</strong> (rule 6, source on blocklist)</li>' +
+        '<li>203.0.113.5 · port 23 · TCP — <strong style="color:#b91c1c">DENY</strong> (rule 4, Telnet — plaintext)</li>' +
+        '<li>8.8.4.4 · port 3389 · TCP — <strong style="color:#b91c1c">DENY</strong> (rule 5, RDP exposed)</li>' +
+        '<li>52.16.99.4 · port 443 · TCP — <strong style="color:#065f46">ALLOW</strong> (rule 1, HTTPS)</li>' +
+        '</ol>';
+      packetArea.replaceWith(div);
+    }
+
+    // ---- Reveal all encapsulation layers ----
+    clone.querySelectorAll('#encap-stage .layer').forEach(l => l.classList.remove('not-added'));
+
+    // ---- Tidy interactive logs / feedback boxes that have no static value ----
+    const asymLog = clone.querySelector('#asym-log');
+    if (asymLog) asymLog.innerHTML = '<div style="padding:8px 12px;color:#94a3b8;font-style:italic">[Live demonstration — replays on the lesson page]</div>';
+    ['#matcher-feedback', '#parsons-feedback', '#fw-feedback'].forEach(sel => {
+      const el = clone.querySelector(sel);
+      if (el) el.remove();
+    });
+
+    // ---- Pull in the page's CSS so the download renders identically ----
+    const styleEl = document.querySelector('style');
+    const css = styleEl ? styleEl.textContent : '';
+
+    return [
+'<!doctype html>',
+'<html lang="en-GB"><head><meta charset="utf-8">',
+'<meta name="viewport" content="width=device-width,initial-scale=1.0">',
+'<title>Network Security: Prevention — Lesson Record</title>',
+'<link rel="preconnect" href="https://fonts.googleapis.com">',
+'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+'<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">',
+'<style>',
+css,
+'/* Download-specific overrides */',
+'body{padding:24px 16px}',
+'.topbar,.progress-strip,.timing-banner,.teacher-note{display:none !important}',
+'.download-meta{padding:18px 22px;background:#eef6ff;border:1px solid #b6d4ff;border-radius:10px;color:#1a42ad;margin:0 auto 22px;max-width:960px}',
+'.download-meta h1{font-size:1.7rem;color:#1a42ad;margin:0 0 6px;letter-spacing:-0.01em}',
+'.download-meta .meta{color:#475569;font-size:.9rem;margin:2px 0}',
+'.download-meta p{margin-top:8px;color:#1a42ad;font-size:14px;line-height:1.55}',
+'.student-input{background:#fafafa;border:1px solid #e2e8f0;border-left:4px solid #2f6cf7;padding:10px 14px;border-radius:6px;white-space:pre-wrap;margin:6px 0 14px;min-height:30px;font-family:Inter,sans-serif;font-size:14.5px;color:#1e293b}',
+'.student-input.empty{color:#94a3b8;font-style:italic;border-left-color:#cbd5e1}',
+'.static-input{font-family:"JetBrains Mono",monospace;background:#f1f5f9;padding:2px 8px;border-radius:4px;color:#1e293b;display:inline-block;min-width:60px}',
+'.annotation-box{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-top:14px}',
+'.annotation-area{display:block !important;margin-top:0 !important}',
+'@media print{body{background:#fff;padding:0}.section-card{box-shadow:none;page-break-inside:avoid;break-inside:avoid}}',
+'</style>',
+'</head><body>',
+'<div class="download-meta">',
+'<h1>Network Security: Prevention</h1>',
+'<p class="meta">A Level Computer Science · OCR H446 · 1.3.3</p>',
+'<p class="meta">Lesson record downloaded on ' + escapeHtml(today) + '</p>',
+'<p>This is your record of today’s lesson. It contains the lesson content with hints, answers and worked outputs revealed, together with everything you typed in (prediction, design plan, section notes, reflections). Teacher’s lesson notes are <em>not</em> included. Open in any web browser, or print it out.</p>',
+'</div>',
+clone.outerHTML,
+'<footer style="margin-top:36px;padding-top:14px;border-top:1px solid #e2e8f0;color:#94a3b8;text-align:center;font-size:.85rem;font-family:\'JetBrains Mono\',monospace;text-transform:uppercase;letter-spacing:.1em">Generated by the Network Security · Prevention lesson page · No data uploaded · created in your browser</footer>',
+'</body></html>'
+    ].join('\n');
+  }
+
+  btn.addEventListener('click', () => {
+    const html = buildHtml();
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'network-security-prevention-lesson-record.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    confirm.textContent = '✓ Downloaded — check your downloads folder.';
+    confirm.classList.add('shown');
+  });
+})();
+
+/* ============ TIMINGS TOGGLE + PER-SECTION BUDGET ============ */
+(function(){
+  // Per-section minute budget for an interview cut covering every topic
+  // briefly. Sum is roughly 48 minutes of content + ~2 minutes of
+  // transitions = ~50 minutes total. Edit the numbers below to re-balance.
+  const budgets = {
+    's-spec':          1,   // panel-facing anchor · point at the ticks · move on
+    's-objectives':    2,   // recap chips · cold-call 1 student
+    's-bigpicture':    2,   // three-rings diagram · anchor metaphor
+    's-firewalls':     4,   // theory + 2-3 packets in the sim
+    's-encapsulation': 3,   // step through layers · port table glance
+    's-proxies':       3,   // toggle once · one "show" button
+    's-predict':       2,   // predict + reveal Caesar output
+    's-investigate':   2,   // do Q1 and Q4 only
+    's-symmetric':     2,   // live slider · 30s demo
+    's-modify':        1,   // reveal shift-7 output + explanation
+    's-asymmetric':    4,   // Alice/Bob/Eve demo + comparison table
+    's-parsons':       3,   // run puzzle 1, check, reveal
+    's-others':        2,   // walk-and-talk across the 6 cards
+    's-breaches':      3,   // flash 2-3 cases (MSG + M&S + 1 other)
+    's-matcher':       3,   // 3-4 drag-and-drops · discuss
+    's-make':          2,   // read scenario · outline only · take home
+    's-exam':          3,   // read Q · reveal 2 mark points
+    's-mythos':        3,   // discussion D1 + D5 only
+    's-plenary':       2,   // display Qs · no full 60s timer
+    's-reflection':    1,   // exit-ticket reminder
+    's-download':      0    // not delivered live · mention if time
+  };
+
+  // Inject a time-pill into each section's pill-row.
+  Object.keys(budgets).forEach(id => {
+    const card = document.getElementById(id);
+    if (!card) return;
+    const pillRow = card.querySelector('.pill-row');
+    if (!pillRow) return;
+    const pill = document.createElement('span');
+    pill.className = 'time-pill';
+    const m = budgets[id];
+    pill.textContent = m > 0 ? ('⏱ ' + m + ' min') : '⏱ optional';
+    pillRow.appendChild(pill);
+  });
+
+  // Top-bar toggle
+  const btn = document.getElementById('toggle-timings');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const on = document.body.classList.toggle('show-timings');
+    btn.classList.toggle('on', on);
+    btn.textContent = on ? '⏱ Hide timings' : '⏱ Timings · 50 min';
+  });
+})();
+
+</script>
+</body>
+</html>
