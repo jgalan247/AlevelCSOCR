@@ -4,7 +4,9 @@ A self-contained interactive lesson on **Network Security: Prevention** — buil
 
 ## Open it
 
-Open `network-security-prevention-jupyter.html` in any modern browser. No npm, no dependencies, no server needed. Only loads Google Fonts; otherwise fully offline.
+Open `index.html` in any modern browser. No npm, no dependencies, no server needed. Only loads Google Fonts; otherwise fully offline.
+
+> Renamed from `network-security-prevention-jupyter.html` so it can be served as the default page by GitHub Pages.
 
 ## Specification mapping
 
