@@ -508,6 +508,33 @@ body.show-timings .timing-banner{display:block}
       </div>
     </section>
 
+    <!-- ============ HOOK · WHY THIS MATTERS ============ -->
+    <section class="section-card" id="s-hook">
+      <div class="head">
+        <div class="pill-row"><span class="pill make">⚠</span><span class="step-label">Why this matters · 60 seconds</span></div>
+        <h2>A real attack. <em style="color:var(--danger)">In Guernsey.</em> Last summer.</h2>
+      </div>
+      <div class="content">
+        <article class="breach-card" style="margin:0">
+          <div class="breach-head">
+            <span class="breach-date">24 June 2024</span>
+            <h4>The Ladies' College · Guernsey</h4>
+          </div>
+          <p style="font-size:14.5px;line-height:1.6;color:var(--text-dim);margin-bottom:8px">On a Monday morning, the school discovered it could no longer access several of its on-premises servers. Some data had been <strong>encrypted by attackers</strong> — the hallmark of a ransomware attack. The Office of the Data Protection Authority's subsequent investigation found <em>"failures in The Ladies' College's security allowed for unauthorised access to be gained to its systems"</em>.</p>
+          <p style="font-size:14.5px;line-height:1.6;color:var(--text-dim);margin-bottom:8px">Pupil personal data was not accessed. The encrypted data was recovered — backups did their job. The College has since been ordered by the ODPA to improve its cyber security.</p>
+          <p style="margin-top:10px;padding:10px 14px;background:#f0f9ff;border-left:3px solid var(--info);border-radius:6px;font-size:13.5px;color:#0c4a6e;line-height:1.55"><span style="margin-right:6px">🇬🇬</span><strong>This is an island school</strong> — the same families, the same building, the same scale of IT setup as half the schools on Guernsey. Today's lesson is about what could have been done <em>before</em> a Monday morning like that one.</p>
+          <p style="margin-top:10px;font-size:13.5px;color:var(--brand-700);font-style:italic">We will come back to <strong>four more cases</strong> later in the lesson — and by the end of today, you will know exactly which defence in the toolkit would have stopped each one. <a href="#s-breaches" style="color:var(--brand-600);text-decoration:underline;font-style:normal">Jump to the full case studies →</a></p>
+        </article>
+      </div>
+      <div class="teacher-note">
+        <div class="tn-label">Teacher notes</div>
+        <div class="timing">1 min · The hook · Read the italics, point at the rest</div>
+        <p><strong>This is the first impression — make it count.</strong> Read aloud the date, the school name, and the one italicised line ("failures in security allowed unauthorised access to be gained to its systems"). The blue Guernsey-context block does the rest visually.</p>
+        <p><strong>The forward-bookmark is the key move.</strong> "We'll come back to four more cases later — by the end of today, you'll know which defence would have stopped each one." Sets up the matcher activity and the deep-dive breach section 30 minutes from now.</p>
+        <p><strong>Don't dwell.</strong> 60 seconds. Move on. The deep-dive is much later.</p>
+      </div>
+    </section>
+
     <!-- ============ SPEC REFERENCE ============ -->
     <section class="section-card spec-card" id="s-spec">
       <div class="head">
@@ -2559,6 +2586,7 @@ clone.outerHTML,
   // briefly. Sum is roughly 48 minutes of content + ~2 minutes of
   // transitions = ~50 minutes total. Edit the numbers below to re-balance.
   const budgets = {
+    's-hook':          1,   // ONE breach · read italics · forward-bookmark · move on
     's-spec':          1,   // panel-facing anchor · point at the ticks · move on
     's-objectives':    2,   // recap chips · cold-call 1 student
     's-bigpicture':    2,   // three-rings diagram · anchor metaphor
@@ -2577,7 +2605,7 @@ clone.outerHTML,
     's-make':          2,   // read scenario · outline only · take home
     's-exam':          3,   // read Q · reveal 2 mark points
     's-quiz':          3,   // 3 strongest Qs (Q1, Q3, Q5) on whiteboards
-    's-mythos':        2,   // one discuss prompt · skip if running over
+    's-mythos':        1,   // one discuss prompt · skip if running over
     's-plenary':       2,   // display Qs · no full 60s timer
     's-reflection':    1,   // exit-ticket reminder
     's-revision':      0,   // take-home reference · not delivered live
